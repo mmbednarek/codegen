@@ -30,7 +30,6 @@ void component::header_include_local(const std::string &inc) {
 
 void component::write_header(std::ostream &stream) {
    writer w(stream);
-   std::sort(m_test.begin(), m_test.end(), [](int a, int b) { return a > b; });
    std::sort(m_header_includes.begin(), m_header_includes.end(), [](const include &left, const include &right) {
       if (left.local && !right.local)
          return true;
