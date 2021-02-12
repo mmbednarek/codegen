@@ -30,14 +30,13 @@ void component::header_include_local(const std::string &inc) {
 
 void component::write_header(std::ostream &stream) {
    writer w(stream);
+   std::sort(m_test.begin(), m_test.end(), [](int a, int b) { return a > b; });
    std::sort(m_header_includes.begin(), m_header_includes.end(), [](const include &left, const include &right) {
-      if (left.local && !right.local) {
-         return -1;
-      }
-      if (!left.local && right.local) {
-         return 1;
-      }
-     return left.path.compare(right.path);
+      if (left.local && !right.local)
+         return true;
+      if (!left.local && right.local)
+         return false;
+      return left.path.compare(right.path) < 0;
    });
 
    if (!m_header_constant.empty()) {
@@ -73,13 +72,11 @@ void component::write_header(std::ostream &stream) {
 void component::write_source(std::ostream &stream) {
    writer w(stream);
    std::sort(m_source_includes.begin(), m_source_includes.end(), [](const include &left, const include &right) {
-      if (left.local && !right.local) {
-         return -1;
-      }
-      if (!left.local && right.local) {
-         return 1;
-      }
-      return left.path.compare(right.path);
+     if (left.local && !right.local)
+        return true;
+     if (!left.local && right.local)
+        return false;
+     return left.path.compare(right.path) < 0;
    });
 
    std::for_each(m_source_includes.begin(), m_source_includes.end(), [&w](const include &inc) {
@@ -101,5 +98,4 @@ void component::write_source(std::ostream &stream) {
       w.write("}");
    }
 }
-
 }// namespace mb::codegen

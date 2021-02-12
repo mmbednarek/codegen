@@ -12,6 +12,7 @@ class component {
 
    std::string m_namespace;
    std::string m_header_constant;
+    std::vector<int> m_test{5,2,6};
    std::vector<include> m_header_includes;
    std::vector<include> m_source_includes;
    std::vector<definable::ptr> m_elements;

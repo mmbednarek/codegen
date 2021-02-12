@@ -123,14 +123,18 @@ TEST(codegen, full) {
    using namespace mb::codegen;
 
    component cmp("mb::foo::bar", "MB_FOO_BAR_H");
-   cmp.header_include("foo");
-   cmp.header_include("bar");
-   cmp.header_include_local("foo.h");
-   cmp.header_include_local("bar.h");
-   cmp.source_include("sfoo");
-   cmp.source_include("sbar");
-   cmp.source_include_local("sfoo.h");
-   cmp.source_include_local("sbar.h");
+   cmp.header_include("bbbb");
+   cmp.header_include_local("bbbb.h");
+   cmp.header_include("aaaa");
+   cmp.header_include_local("aaaa.h");
+   cmp.header_include("zzzz");
+   cmp.header_include_local("zzzz.h");
+   cmp.source_include("bbbbbb");
+   cmp.source_include_local("bbbbbb.h");
+   cmp.source_include("aaaaaa");
+   cmp.source_include_local("aaaaaa.h");
+   cmp.source_include("zzzzzz");
+   cmp.source_include_local("zzzzzz.h");
 
    class_spec c("foo", "FOO_H");
    c.add_public(method("int", "do_stuff", {{"int", "a"}, {"float", "b"}}, [](statement::collector &col) {
