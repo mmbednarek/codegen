@@ -5,11 +5,12 @@
 namespace mb::codegen {
 
 struct attribute {
-   std::string_view type;
-   std::string_view name;
+   std::string type;
+   std::string name;
    bool default_constr;
 
-   attribute(std::string_view type, std::string_view name, bool default_const = true);
+   attribute() = default;
+   attribute(std::string type, std::string name, bool default_const = true);
    attribute(const attribute &other);
 };
 

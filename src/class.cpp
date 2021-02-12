@@ -1,10 +1,12 @@
 #include <mb/codegen/class.h>
 
+#include <utility>
+
 namespace mb::codegen {
 
-attribute::attribute(std::string_view type, std::string_view name, bool default_const) : type(type),
-                                                                                         name(name),
-                                                                                         default_constr(default_const) {}
+attribute::attribute(std::string type, std::string name, bool default_const) : type(std::move(type)),
+                                                                                      name(std::move(name)),
+                                                                                      default_constr(default_const) {}
 
 attribute::attribute(const attribute &other) : type(other.type),
                                                name(other.name),
@@ -62,14 +64,16 @@ class_spec::class_spec(std::string_view name) : m_name(name) {}
 class_spec::class_spec(const class_spec &other) : m_name(other.m_name),
                                                   m_public_members(other.m_public_members.size()),
                                                   m_private_members(other.m_private_members.size()),
-                                                  m_public_attributes(other.m_public_attributes),
-                                                  m_private_attributes(other.m_private_attributes) {
+                                                  m_public_attributes(other.m_public_attributes.size()),
+                                                  m_private_attributes(other.m_private_attributes.size()) {
    std::transform(other.m_public_members.begin(), other.m_public_members.end(), m_public_members.begin(), [](const class_member::ptr &mem) {
       return mem->copy();
    });
    std::transform(other.m_private_members.begin(), other.m_private_members.end(), m_private_members.begin(), [](const class_member::ptr &mem) {
       return mem->copy();
    });
+   std::copy(other.m_public_attributes.begin(), other.m_public_attributes.end(), m_public_attributes.begin());
+   std::copy(other.m_private_attributes.begin(), other.m_private_attributes.end(), m_private_attributes.begin());
 }
 
 void class_spec::add_public(const class_member &member) {
@@ -85,11 +89,11 @@ void class_spec::add_private(const class_member &member) {
 }
 
 void class_spec::add_public(std::string_view type, std::string_view name) {
-   m_public_attributes.emplace_back(attribute(type, name));
+   m_public_attributes.emplace_back(attribute(std::string(type), std::string(name)));
 }
 
 void class_spec::add_private(std::string_view type, std::string_view name) {
-   m_private_attributes.emplace_back(attribute(type, name));
+   m_private_attributes.emplace_back(attribute(std::string(type), std::string(name)));
 }
 
 method::method(const method &other) : m_return_type(other.m_return_type),
