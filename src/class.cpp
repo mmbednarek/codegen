@@ -57,10 +57,10 @@ class_spec::class_spec(const class_spec &other) : m_name(other.m_name),
                                                   m_public_attributes(other.m_public_attributes),
                                                   m_private_attributes(other.m_private_attributes) {
    std::transform(other.m_public_members.begin(), other.m_public_members.end(), m_public_members.begin(), [](const class_member::ptr &mem) {
-     return mem->copy();
+      return mem->copy();
    });
    std::transform(other.m_private_members.begin(), other.m_private_members.end(), m_private_members.begin(), [](const class_member::ptr &mem) {
-     return mem->copy();
+      return mem->copy();
    });
 }
 
@@ -93,7 +93,8 @@ void class_spec::add_private(std::string_view type, std::string_view name) {
 method::method(const method &other) : m_return_type(other.m_return_type),
                                       m_name(other.m_name),
                                       m_class_name(other.m_class_name),
-                                      m_arguments(other.m_arguments) {
+                                      m_arguments(other.m_arguments),
+                                      m_const(other.m_const) {
    m_statements.reserve(other.m_statements.size());
    std::transform(other.m_statements.begin(), other.m_statements.end(), std::back_inserter(m_statements), [](const statement::ptr &stmt) {
       return stmt->copy();
@@ -110,7 +111,22 @@ method::method(std::string_view return_type,
                                                                                statement::collector col;
                                                                                statement_gen(col);
                                                                                return col.build();
-                                                                            }()) {}
+                                                                            }()),
+                                                                            m_const(false) {}
+
+method::method(std::string_view return_type,
+               std::string_view name,
+               std::vector<arg> arguments,
+               bool constant,
+               std::function<void(statement::collector &)> statement_gen) : m_return_type(return_type),
+                                                                            m_name(name),
+                                                                            m_arguments(std::move(arguments)),
+                                                                            m_statements([&statement_gen]() {
+                                                                               statement::collector col;
+                                                                               statement_gen(col);
+                                                                               return col.build();
+                                                                            }()),
+                                                                            m_const(constant) {}
 
 void method::write_declaration(writer &w) const {
    w.put_indent();
@@ -122,7 +138,11 @@ void method::write_declaration(writer &w) const {
          w.write(", {} {}", arg.type, arg.name);
       });
    }
-   w.write(");\n");
+   if (m_const) {
+      w.write(") const;\n");
+   } else {
+      w.write(");\n");
+   }
 }
 
 void method::write_definition(writer &w) const {
@@ -135,7 +155,11 @@ void method::write_definition(writer &w) const {
          w.write(", {} {}", arg.type, arg.name);
       });
    }
-   w.write(") {\n");
+   if (m_const) {
+      w.write(") const {\n");
+   } else {
+      w.write(") {\n");
+   }
    w.indent_in();
    std::for_each(m_statements.begin(), m_statements.end(), [&w](const statement::ptr &stmt) {
       stmt->write_statement(w);
@@ -236,6 +260,25 @@ void static_attribute::set_class_name(std::string_view class_name) {
 
 class_member::ptr static_attribute::copy() const {
    return std::make_unique<static_attribute>(*this);
+}
+
+default_constructor::default_constructor(const default_constructor &other) : m_class_name(other.m_class_name) {}
+
+void default_constructor::write_declaration(writer &w) const {
+   w.put_indent();
+   w.write("{}() = default;\n", m_class_name);
+}
+
+void default_constructor::write_definition(writer &w) const {
+   // nothing here
+}
+
+void default_constructor::set_class_name(std::string_view class_name) {
+   m_class_name = class_name;
+}
+
+class_member::ptr default_constructor::copy() const {
+   return std::make_unique<default_constructor>(*this);
 }
 
 }// namespace mb::codegen

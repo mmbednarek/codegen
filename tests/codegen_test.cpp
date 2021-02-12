@@ -53,7 +53,7 @@ TEST(codegen, classes) {
    using namespace mb::codegen;
 
    class_spec c("foo");
-   c.add_public(method("int", "do_stuff", {{"int", "a"}, {"float", "b"}}, [](statement::collector &col) {
+   c.add_public(method("int", "do_stuff", {{"int", "a"}, {"float", "b"}}, true, [](statement::collector &col) {
       lambda lam({{"int", "v"}}, [](statement::collector &col) {
          col << expr(raw("return v * a * {} - 1", "b"));
       }, raw("a"), raw("b"));
@@ -107,7 +107,7 @@ TEST(codegen, classes) {
 TEST(codegen, full) {
    using namespace mb::codegen;
 
-   component cmp("mb::foo::bar");
+   component cmp("mb::foo::bar", "MB_FOO_BAR_H");
    cmp.header_include("foo");
    cmp.header_include("bar");
    cmp.header_include_local("foo.h");

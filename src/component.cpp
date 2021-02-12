@@ -6,6 +6,8 @@ namespace mb::codegen {
 
 component::component(std::string ns) : m_namespace(std::move(ns)) {}
 
+component::component(std::string ns, std::string header_constant) : m_namespace(std::move(ns)), m_header_constant(std::move(header_constant)) {}
+
 void component::operator<<(const definable &def) {
    m_elements.emplace_back(def.copy());
 }
@@ -38,6 +40,12 @@ void component::write_header(std::ostream &stream) {
       return right.path.compare(left.path);
    });
 
+   if (!m_header_constant.empty()) {
+      w.write("#ifndef {}\n#define {}\n", m_header_constant, m_header_constant);
+   } else {
+      w.write("#pragma once\n");
+   }
+
    std::for_each(m_header_includes.begin(), m_header_includes.end(), [&w](const include &inc) {
       if (inc.local) {
          w.write("#include \"{}\"\n", inc.path);
@@ -54,7 +62,11 @@ void component::write_header(std::ostream &stream) {
       def->write_declaration(w);
    });
    if (!m_namespace.empty()) {
-      w.write("}");
+      w.write("}\n");
+   }
+
+   if (!m_header_constant.empty()) {
+      w.write("#endif//{}\n", m_header_constant);
    }
 }
 

@@ -11,12 +11,14 @@ class component {
    };
 
    std::string m_namespace;
+   std::string m_header_constant;
    std::vector<include> m_header_includes;
    std::vector<include> m_source_includes;
    std::vector<definable::ptr> m_elements;
 
  public:
    explicit component(std::string ns);
+   explicit component(std::string ns, std::string header_constant);
 
    void source_include(const std::string &inc);
    void source_include_local(const std::string &inc);

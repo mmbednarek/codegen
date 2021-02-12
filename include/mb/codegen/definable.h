@@ -48,7 +48,7 @@ public:
 
     void write_declaration(writer &w) const override;
     void write_definition(writer &w) const override;
-    ptr copy() const override;
+    [[nodiscard]] ptr copy() const override;
 };
 
 }// namespace mb::codegen
