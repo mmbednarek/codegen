@@ -18,6 +18,7 @@ class statement {
 
     public:
       collector &operator<<(const statement &stmt);
+      collector &operator<<(const expression &expre);
       std::vector<statement::ptr> build();
    };
 };
@@ -66,6 +67,17 @@ class switch_statement : public statement {
 
    void add(const expression &case_expr, std::function<void(statement::collector &)> statements);
    void add_noscope(const expression &case_expr, std::function<void(statement::collector &)> statements);
+
+   void write_statement(writer &w) const override;
+   ptr copy() const override;
+};
+
+class return_statement : public statement {
+   expression::ptr m_value;
+ public:
+   return_statement() = default;
+   explicit return_statement(const expression &expre);
+   return_statement(const return_statement &other);
 
    void write_statement(writer &w) const override;
    ptr copy() const override;

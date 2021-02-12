@@ -21,6 +21,12 @@ statement::collector &statement::collector::operator<<(const statement &stmt) {
    return *this;
 }
 
+
+statement::collector &statement::collector::operator<<(const expression &expre) {
+   m_statements.emplace_back(expr(expre).copy());
+   return *this;
+}
+
 std::vector<statement::ptr> statement::collector::build() {
    return std::move(m_statements);
 }
@@ -173,4 +179,21 @@ switch_statement::case_statement::case_statement(const expression &case_expr, st
                                                                                                                                     m_statements(std::move(statements)),
                                                                                                                                     m_scope(scope) {}
 
+return_statement::return_statement(const expression &expre) : m_value(expre.copy()) {}
+
+return_statement::return_statement(const return_statement &other) : m_value(other.m_value == nullptr ? nullptr : other.m_value->copy()) {}
+
+void return_statement::write_statement(writer &w) const {
+   w.put_indent();
+   w.write("return");
+   if (m_value != nullptr) {
+      w.write(" ");
+      m_value->write_expression(w);
+   }
+   w.write(";\n");
+}
+
+statement::ptr return_statement::copy() const {
+   return std::make_unique<return_statement>(*this);
+}
 }// namespace mb::codegen

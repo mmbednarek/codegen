@@ -1,12 +1,12 @@
 #include <gtest/gtest.h>
 #include <iostream>
 #include <mb/codegen/class.h>
+#include <mb/codegen/component.h>
 #include <mb/codegen/definable.h>
 #include <mb/codegen/expression.h>
 #include <mb/codegen/lambda.h>
 #include <mb/codegen/statement.h>
 #include <mb/codegen/writer.h>
-#include <mb/codegen/component.h>
 
 TEST(codegen, call) {
    using namespace mb::codegen;
@@ -37,7 +37,7 @@ TEST(codegen, function) {
    using namespace mb::codegen;
 
    function func("std::string", "append_strings", {{"std::string", "a"}, {"std::string", "b"}}, [](statement::collector &col) {
-      col << expr(call("hello"));
+      col << call("hello");
    });
 
    std::stringstream ss;
@@ -54,26 +54,30 @@ TEST(codegen, classes) {
 
    class_spec c("foo");
    c.add_public(method("int", "do_stuff", {{"int", "a"}, {"float", "b"}}, true, [](statement::collector &col) {
-      lambda lam({{"int", "v"}}, [](statement::collector &col) {
-         col << expr(raw("return v * a * {} - 1", "b"));
-      }, raw("a"), raw("b"));
-      col << expr(call("foobar", lam));
-      col << expr(raw("return a + (int)b"));
-     lambda for_each_lam({{"const int", "&val"}}, [](statement::collector &col) {
-       col << expr(raw("stuff"));
-     });
-     col << expr(call("std::transform", call("args.begin"), call("args.end"), call("target.begin"), for_each_lam));
+      lambda lam(
+              {{"int", "v"}}, [](statement::collector &col) {
+                 col << raw("return v * a * {} - 1", "b");
+              },
+              raw("a"), raw("b"));
+      col << call("foobar", lam);
+      col << raw("return a + (int)b");
+      lambda for_each_lam({{"const int", "&val"}}, [](statement::collector &col) {
+         col << raw("stuff");
+      });
+      col << call("std::transform", call("args.begin"), call("args.end"), call("target.begin"), for_each_lam);
    }));
    c.add_public(method_template("int", "do_stuff", {{"typename", "T"}}, {{"int", "a"}, {"float", "b"}}, true, [](statement::collector &col) {
-     lambda lam({{"int", "v"}}, [](statement::collector &col) {
-       col << expr(raw("return v * a * {} - 1", "b"));
-     }, raw("a"), raw("b"));
-     col << expr(call("foobar", lam));
-     col << expr(raw("return a + (int)b"));
-     lambda for_each_lam({{"const int", "&val"}}, [](statement::collector &col) {
-       col << expr(raw("stuff"));
-     });
-     col << expr(call("std::transform", call("args.begin"), call("args.end"), call("target.begin"), for_each_lam));
+      lambda lam(
+              {{"int", "v"}}, [](statement::collector &col) {
+                 col << raw("return v * a * {} - 1", "b");
+              },
+              raw("a"), raw("b"));
+      col << call("foobar", lam);
+      col << raw("return a + (int)b");
+      lambda for_each_lam({{"const int", "&val"}}, [](statement::collector &col) {
+         col << raw("stuff");
+      });
+      col << call("std::transform", call("args.begin"), call("args.end"), call("target.begin"), for_each_lam);
    }));
 
    struct_constructor constr1;
@@ -89,22 +93,22 @@ TEST(codegen, classes) {
 
    c.add_public(static_attribute("std::vector<std::vector<int>>", "something", something));
    c.add_private(static_method("void", "do_something_else", {}, [](statement::collector &col) {
-      col << expr(call("do_stuff", raw("3"), raw("0.4")));
+      col << call("do_stuff", raw("3"), raw("0.4"));
       col << if_statement(
               raw("a == b"),
               [](statement::collector &col) {// if
-                 col << expr(call("foobar"));
+                 col << call("foobar");
                  switch_statement some_switch(raw("test"));
                  some_switch.add_noscope(raw("5"), [](statement::collector &col) {
-                    col << expr(call("something"));
+                    col << call("something");
                  });
                  some_switch.add(raw("4"), [](statement::collector &col) {
-                    col << expr(call("something_else"));
+                    col << call("something_else");
                  });
                  col << some_switch;
               },
               [](statement::collector &col) {// else
-                 col << expr(call("something_else"));
+                 col << call("something_else");
               });
    }));
    c.add_public("int", "bar");
@@ -130,15 +134,17 @@ TEST(codegen, full) {
 
    class_spec c("foo");
    c.add_public(method("int", "do_stuff", {{"int", "a"}, {"float", "b"}}, [](statement::collector &col) {
-     lambda lam({{"int", "v"}}, [](statement::collector &col) {
-       col << expr(raw("return v * a * {} - 1", "b"));
-     }, raw("a"), raw("b"));
-     col << expr(call("foobar", lam));
-     col << expr(raw("return a + (int)b"));
-     lambda for_each_lam({{"const int", "&val"}}, [](statement::collector &col) {
-       col << expr(raw("stuff"));
-     });
-     col << expr(call("std::transform", call("args.begin"), call("args.end"), call("target.begin"), for_each_lam));
+      lambda lam(
+              {{"int", "v"}}, [](statement::collector &col) {
+                 col << raw("return v * a * {} - 1", "b");
+              },
+              raw("a"), raw("b"));
+      col << call("foobar", lam);
+      col << return_statement(raw("a + b"));
+      lambda for_each_lam({{"const int", "&val"}}, [](statement::collector &col) {
+         col << raw("stuff");
+      });
+      col << call("std::transform", call("args.begin"), call("args.end"), call("target.begin"), for_each_lam);
    }));
 
    struct_constructor constr1;
@@ -154,23 +160,25 @@ TEST(codegen, full) {
 
    c.add_public(static_attribute("std::vector<std::vector<int>>", "something", something));
    c.add_private(method("void", "do_something_else", {}, [](statement::collector &col) {
-     col << expr(call("do_stuff", raw("3"), raw("0.4")));
-     col << if_statement(
-             raw("a == b"),
-             [](statement::collector &col) {// if
-               col << expr(call("foobar"));
-               switch_statement some_switch(raw("test"));
-               some_switch.add_noscope(raw("5"), [](statement::collector &col) {
-                 col << expr(call("something"));
-               });
-               some_switch.add(raw("4"), [](statement::collector &col) {
-                 col << expr(call("something_else"));
-               });
-               col << some_switch;
-             },
-             [](statement::collector &col) {// else
-               col << expr(call("something_else"));
-             });
+      col << call("do_stuff", raw("3"), raw("0.4"));
+      col << if_statement(
+              raw("a == b"),
+              [](statement::collector &col) {// if
+                 col << call(lambda({}, [](statement::collector &col) {
+                    col << call("foobar");
+                 }));
+                 switch_statement some_switch(raw("test"));
+                 some_switch.add_noscope(raw("5"), [](statement::collector &col) {
+                    col << call("something");
+                 });
+                 some_switch.add(raw("4"), [](statement::collector &col) {
+                    col << call("something_else");
+                 });
+                 col << some_switch;
+              },
+              [](statement::collector &col) {// else
+                 col << call("something_else");
+              });
    }));
    c.add_public("int", "bar");
    c.add_private("int", "bar2");

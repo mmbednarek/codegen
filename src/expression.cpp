@@ -3,15 +3,15 @@
 
 namespace mb::codegen {
 
-call::call(const call &other) : m_function_name(other.m_function_name) {
-   m_arguments.reserve(other.m_arguments.size());
-   std::transform(other.m_arguments.begin(), other.m_arguments.end(), std::back_inserter(m_arguments), [](const expression::ptr &arg) {
+call::call(const call &other) : m_function_name(other.m_function_name->copy()),
+                                m_arguments(other.m_arguments.size()) {
+   std::transform(other.m_arguments.begin(), other.m_arguments.end(), m_arguments.begin(), [](const expression::ptr &arg) {
       return arg->copy();
    });
 }
 
 void call::write_expression(writer &w) const {
-   w.write(m_function_name);
+   m_function_name->write_expression(w);
    w.write("(");
    if (!m_arguments.empty()) {
       auto it_first = m_arguments.begin();

@@ -15,18 +15,6 @@ class expression {
    [[nodiscard]] virtual expression::ptr copy() const = 0;
 };
 
-class call : public expression {
-   std::string_view m_function_name;
-   std::vector<expression::ptr> m_arguments;
-public:
-   template<typename... ARGS>
-   explicit call(std::string_view function_name, ARGS &&...args) : m_function_name(function_name), m_arguments(as_vector_copy<expression::ptr, expression>(args...)) {}
-   call(const call &other);
-
-   void write_expression(writer &w) const override;
-   [[nodiscard]] ptr copy() const override;
-};
-
 class raw : public expression {
    std::string m_contents;
 
@@ -34,6 +22,20 @@ class raw : public expression {
    explicit raw(const std::string &contents);
    template<typename... ARGS>
    explicit raw(const std::string &format, ARGS... args) : m_contents(fmt::format(format, args...)) {}
+
+   void write_expression(writer &w) const override;
+   [[nodiscard]] ptr copy() const override;
+};
+
+class call : public expression {
+   expression::ptr m_function_name;
+   std::vector<expression::ptr> m_arguments;
+ public:
+   template<typename... ARGS>
+   explicit call(const std::string &function_name, ARGS &&...args) : m_function_name(raw(function_name).copy()), m_arguments(as_vector_copy<expression::ptr, expression>(args...)) {}
+   template<typename... ARGS>
+   explicit call(const expression &expre, ARGS &&...args) : m_function_name(expre.copy()), m_arguments(as_vector_copy<expression::ptr, expression>(args...)) {}
+   call(const call &other);
 
    void write_expression(writer &w) const override;
    [[nodiscard]] ptr copy() const override;
