@@ -2,6 +2,10 @@
 
 namespace mb::codegen {
 
+attribute::attribute(std::string_view type, std::string_view name, bool default_const) : type(type),
+                                                                                         name(name),
+                                                                                         default_constr(default_const) {}
+
 attribute::attribute(const attribute &other) : type(other.type),
                                                name(other.name),
                                                default_constr(other.default_constr) {}
@@ -81,17 +85,11 @@ void class_spec::add_private(const class_member &member) {
 }
 
 void class_spec::add_public(std::string_view type, std::string_view name) {
-   m_public_attributes.emplace_back(attribute{
-           .type = type,
-           .name = name,
-   });
+   m_public_attributes.emplace_back(attribute(type, name));
 }
 
 void class_spec::add_private(std::string_view type, std::string_view name) {
-   m_private_attributes.emplace_back(attribute{
-           .type = type,
-           .name = name,
-   });
+   m_private_attributes.emplace_back(attribute(type, name));
 }
 
 method::method(const method &other) : m_return_type(other.m_return_type),
@@ -398,7 +396,7 @@ void method_template::write_declaration(writer &w) const {
       auto it_first = m_template_arguments.begin();
       w.write("{} {}", it_first->type, it_first->name);
       std::for_each(it_first + 1, m_template_arguments.end(), [&w](const arg &arg) {
-        w.write(", {} {}", arg.type, arg.name);
+         w.write(", {} {}", arg.type, arg.name);
       });
    }
    w.write(">\n");
@@ -408,7 +406,7 @@ void method_template::write_declaration(writer &w) const {
       auto it_first = m_arguments.begin();
       w.write("{} {}", it_first->type, it_first->name);
       std::for_each(it_first + 1, m_arguments.end(), [&w](const arg &arg) {
-        w.write(", {} {}", arg.type, arg.name);
+         w.write(", {} {}", arg.type, arg.name);
       });
    }
    if (m_const) {
@@ -418,7 +416,7 @@ void method_template::write_declaration(writer &w) const {
    }
    w.indent_in();
    std::for_each(m_statements.begin(), m_statements.end(), [&w](const statement::ptr &stmt) {
-     stmt->write_statement(w);
+      stmt->write_statement(w);
    });
    w.indent_out();
    w.put_indent();

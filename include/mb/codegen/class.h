@@ -7,9 +7,10 @@ namespace mb::codegen {
 struct attribute {
    std::string_view type;
    std::string_view name;
-   bool default_constr{true};
+   bool default_constr;
 
-    attribute(const attribute &other);
+   attribute(std::string_view type, std::string_view name, bool default_const = true);
+   attribute(const attribute &other);
 };
 
 class class_member {
@@ -103,6 +104,7 @@ class static_method : public class_member {
 
 class default_constructor : public class_member {
    std::string_view m_class_name;
+
  public:
    default_constructor() = default;
    default_constructor(const default_constructor &other);
