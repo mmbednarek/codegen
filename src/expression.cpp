@@ -99,4 +99,32 @@ expression::ptr struct_constructor::copy() const {
    return std::make_unique<struct_constructor>(*this);
 }
 
+method_call::method_call(const method_call &other) : m_object(other.m_object->copy()),
+                                                     m_method_name(other.m_method_name),
+                                                     m_arguments(other.m_arguments.size()) {
+   std::transform(other.m_arguments.begin(), other.m_arguments.end(), m_arguments.begin(), [](const expression::ptr &arg) {
+      return arg->copy();
+   });
+}
+
+void method_call::write_expression(writer &w) const {
+   m_object->write_expression(w);
+   w.write(".");
+   w.write(m_method_name);
+   w.write("(");
+   if (!m_arguments.empty()) {
+      auto it_first = m_arguments.begin();
+      (*it_first)->write_expression(w);
+      std::for_each(it_first + 1, m_arguments.end(), [&w](const expression::ptr &ex) {
+        w.write(", ");
+        ex->write_expression(w);
+      });
+   }
+   w.write(")");
+}
+
+expression::ptr method_call::copy() const {
+   return std::make_unique<method_call>(*this);
+}
+
 }// namespace mb::codegen

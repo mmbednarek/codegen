@@ -3,6 +3,7 @@
 #include "writer.h"
 #include <mb/generic.h>
 #include <memory>
+#include <utility>
 #include <vector>
 
 namespace mb::codegen {
@@ -36,6 +37,19 @@ class call : public expression {
    template<typename... ARGS>
    explicit call(const expression &expre, ARGS &&...args) : m_function_name(expre.copy()), m_arguments(as_vector_copy<expression::ptr, expression>(args...)) {}
    call(const call &other);
+
+   void write_expression(writer &w) const override;
+   [[nodiscard]] ptr copy() const override;
+};
+
+class method_call : public expression {
+   expression::ptr m_object;
+   std::string m_method_name;
+   std::vector<expression::ptr> m_arguments;
+ public:
+   template<typename... ARGS>
+   method_call(const expression &object, std::string method_name, ARGS &&...args) : m_object(object.copy()), m_method_name(std::move(method_name)), m_arguments(as_vector_copy<expression::ptr, expression>(args...)) {}
+   method_call(const method_call &other);
 
    void write_expression(writer &w) const override;
    [[nodiscard]] ptr copy() const override;
