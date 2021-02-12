@@ -132,7 +132,7 @@ TEST(codegen, full) {
    cmp.source_include_local("sfoo.h");
    cmp.source_include_local("sbar.h");
 
-   class_spec c("foo");
+   class_spec c("foo", "FOO_H");
    c.add_public(method("int", "do_stuff", {{"int", "a"}, {"float", "b"}}, [](statement::collector &col) {
       lambda lam(
               {{"int", "v"}}, [](statement::collector &col) {

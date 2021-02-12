@@ -5,14 +5,17 @@
 namespace mb::codegen {
 
 attribute::attribute(std::string type, std::string name, bool default_const) : type(std::move(type)),
-                                                                                      name(std::move(name)),
-                                                                                      default_constr(default_const) {}
+                                                                               name(std::move(name)),
+                                                                               default_constr(default_const) {}
 
 attribute::attribute(const attribute &other) : type(other.type),
                                                name(other.name),
                                                default_constr(other.default_constr) {}
 
 void class_spec::write_declaration(writer &w) const {
+   if (!m_class_constant.empty()) {
+      w.write("#ifndef {}\n#define {}\n", m_class_constant, m_class_constant);
+   }
    w.put_indent();
    w.write("class {} {}\n", m_name, "{");
    w.indent_in();
@@ -43,7 +46,11 @@ void class_spec::write_declaration(writer &w) const {
    });
    w.indent_out();
    w.put_indent();
-   w.write("};\n\n");
+   w.write("};\n");
+   if (!m_class_constant.empty()) {
+      w.write("#endif//{}\n", m_class_constant);
+   }
+   w.write("\n");
 }
 
 void class_spec::write_definition(writer &w) const {
@@ -59,13 +66,17 @@ definable::ptr class_spec::copy() const {
    return std::make_unique<class_spec>(*this);
 }
 
-class_spec::class_spec(std::string_view name) : m_name(name) {}
+class_spec::class_spec(std::string name) : m_name(std::move(name)) {}
+
+class_spec::class_spec(std::string name, std::string constant) : m_name(std::move(name)),
+                                                                 m_class_constant(std::move(constant)) {}
 
 class_spec::class_spec(const class_spec &other) : m_name(other.m_name),
                                                   m_public_members(other.m_public_members.size()),
                                                   m_private_members(other.m_private_members.size()),
                                                   m_public_attributes(other.m_public_attributes.size()),
-                                                  m_private_attributes(other.m_private_attributes.size()) {
+                                                  m_private_attributes(other.m_private_attributes.size()),
+                                                  m_class_constant(other.m_class_constant) {
    std::transform(other.m_public_members.begin(), other.m_public_members.end(), m_public_members.begin(), [](const class_member::ptr &mem) {
       return mem->copy();
    });

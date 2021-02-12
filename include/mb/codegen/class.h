@@ -25,14 +25,15 @@ class class_member {
 };
 
 class class_spec : public definable {
-   std::string_view m_name;
+   std::string m_name;
    std::vector<class_member::ptr> m_public_members;
    std::vector<class_member::ptr> m_private_members;
    std::vector<attribute> m_public_attributes;
    std::vector<attribute> m_private_attributes;
-
+   std::string m_class_constant;
  public:
-   explicit class_spec(std::string_view name);
+   explicit class_spec(std::string name);
+   explicit class_spec(std::string name, std::string constant);
    class_spec(const class_spec &other);
 
    void add_public(const class_member &member);
