@@ -1,5 +1,4 @@
 #include <mb/codegen/class.h>
-
 #include <utility>
 
 namespace mb::codegen {
@@ -190,7 +189,7 @@ class_member::ptr method::copy() const {
    return std::make_unique<method>(*this);
 }
 
-void method::set_class_name(std::string_view class_name) {
+void method::set_class_name(std::string class_name) {
    m_class_name = class_name;
 }
 
@@ -242,7 +241,7 @@ void constructor::write_definition(writer &w) const {
    w.write("}\n\n");
 }
 
-void constructor::set_class_name(std::string_view class_name) {
+void constructor::set_class_name(std::string class_name) {
    m_class_name = class_name;
 }
 
@@ -271,7 +270,7 @@ void static_attribute::write_definition(writer &w) const {
    w.write("};\n\n");
 }
 
-void static_attribute::set_class_name(std::string_view class_name) {
+void static_attribute::set_class_name(std::string class_name) {
    m_class_name = class_name;
 }
 
@@ -290,7 +289,7 @@ void default_constructor::write_definition(writer &w) const {
    // nothing here
 }
 
-void default_constructor::set_class_name(std::string_view class_name) {
+void default_constructor::set_class_name(std::string class_name) {
    m_class_name = class_name;
 }
 
@@ -353,7 +352,7 @@ void static_method::write_definition(writer &w) const {
    w.write("}\n\n");
 }
 
-void static_method::set_class_name(std::string_view class_name) {
+void static_method::set_class_name(std::string class_name) {
    m_class_name = class_name;
 }
 
@@ -442,7 +441,7 @@ void method_template::write_definition(writer &w) const {
    // nothing here
 }
 
-void method_template::set_class_name(std::string_view class_name) {
+void method_template::set_class_name(std::string class_name) {
    // nothing here
 }
 

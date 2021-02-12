@@ -20,7 +20,7 @@ class class_member {
 
    virtual void write_declaration(writer &w) const = 0;
    virtual void write_definition(writer &w) const = 0;
-   virtual void set_class_name(std::string_view class_name) = 0;
+   virtual void set_class_name(std::string class_name) = 0;
    [[nodiscard]] virtual ptr copy() const = 0;
 };
 
@@ -49,7 +49,7 @@ class class_spec : public definable {
 class method : public class_member {
  private:
    std::string_view m_return_type;
-   std::string_view m_class_name;
+   std::string m_class_name;
    std::string_view m_name;
    std::vector<arg> m_arguments;
    std::vector<statement::ptr> m_statements;
@@ -62,7 +62,7 @@ class method : public class_member {
 
    void write_declaration(writer &w) const override;
    void write_definition(writer &w) const override;
-   void set_class_name(std::string_view class_name) override;
+   void set_class_name(std::string class_name) override;
    [[nodiscard]] ptr copy() const override;
 };
 
@@ -82,14 +82,14 @@ class method_template : public class_member {
 
    void write_declaration(writer &w) const override;
    void write_definition(writer &w) const override;
-   void set_class_name(std::string_view class_name) override;
+   void set_class_name(std::string class_name) override;
    [[nodiscard]] ptr copy() const override;
 };
 
 class static_method : public class_member {
  private:
    std::string_view m_return_type;
-   std::string_view m_class_name;
+   std::string m_class_name;
    std::string_view m_name;
    std::vector<arg> m_arguments;
    std::vector<statement::ptr> m_statements;
@@ -100,12 +100,12 @@ class static_method : public class_member {
 
    void write_declaration(writer &w) const override;
    void write_definition(writer &w) const override;
-   void set_class_name(std::string_view class_name) override;
+   void set_class_name(std::string class_name) override;
    [[nodiscard]] ptr copy() const override;
 };
 
 class default_constructor : public class_member {
-   std::string_view m_class_name;
+   std::string m_class_name;
 
  public:
    default_constructor() = default;
@@ -113,13 +113,13 @@ class default_constructor : public class_member {
 
    void write_declaration(writer &w) const override;
    void write_definition(writer &w) const override;
-   void set_class_name(std::string_view class_name) override;
+   void set_class_name(std::string class_name) override;
    ptr copy() const override;
 };
 
 class constructor : public class_member {
  private:
-   std::string_view m_class_name;
+   std::string m_class_name;
    std::vector<arg> m_arguments;
    std::vector<statement::ptr> m_statements;
 
@@ -129,13 +129,13 @@ class constructor : public class_member {
 
    void write_declaration(writer &w) const override;
    void write_definition(writer &w) const override;
-   void set_class_name(std::string_view class_name) override;
+   void set_class_name(std::string class_name) override;
    [[nodiscard]] ptr copy() const override;
 };
 
 class static_attribute : public class_member {
  private:
-   std::string_view m_class_name;
+   std::string m_class_name;
    std::string_view m_type;
    std::string_view m_name;
    expression::ptr m_value;
@@ -146,7 +146,7 @@ class static_attribute : public class_member {
 
    void write_declaration(writer &w) const override;
    void write_definition(writer &w) const override;
-   void set_class_name(std::string_view class_name) override;
+   void set_class_name(std::string class_name) override;
    [[nodiscard]] ptr copy() const override;
 };
 
