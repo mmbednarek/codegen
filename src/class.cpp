@@ -2,6 +2,10 @@
 
 namespace mb::codegen {
 
+attribute::attribute(const attribute &other) : type(other.type),
+                                               name(other.name),
+                                               default_constr(other.default_constr) {}
+
 void class_spec::write_declaration(writer &w) const {
    w.put_indent();
    w.write("class {} {}\n", m_name, "{");

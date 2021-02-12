@@ -41,7 +41,7 @@ expression::ptr raw::copy() const {
 assign::assign(std::string_view variable, const expression &value) : m_variable(variable), m_value(value.copy()) {}
 
 void assign::write_expression(writer &w) const {
-   w.write("{} = ");
+   w.write("{} = ", m_variable);
    m_value->write_expression(w);
 }
 

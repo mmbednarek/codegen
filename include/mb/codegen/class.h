@@ -8,6 +8,8 @@ struct attribute {
    std::string_view type;
    std::string_view name;
    bool default_constr{true};
+
+    attribute(const attribute &other);
 };
 
 class class_member {
