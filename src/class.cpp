@@ -310,7 +310,7 @@ void static_method::write_declaration(writer &w) const {
       auto it_first = m_arguments.begin();
       w.write("{} {}", it_first->type, it_first->name);
       std::for_each(it_first + 1, m_arguments.end(), [&w](const arg &arg) {
-        w.write(", {} {}", arg.type, arg.name);
+         w.write(", {} {}", arg.type, arg.name);
       });
    }
    w.write(");\n");
@@ -323,13 +323,13 @@ void static_method::write_definition(writer &w) const {
       auto it_first = m_arguments.begin();
       w.write("{} {}", it_first->type, it_first->name);
       std::for_each(it_first + 1, m_arguments.end(), [&w](const arg &arg) {
-        w.write(", {} {}", arg.type, arg.name);
+         w.write(", {} {}", arg.type, arg.name);
       });
    }
    w.write(") {\n");
    w.indent_in();
    std::for_each(m_statements.begin(), m_statements.end(), [&w](const statement::ptr &stmt) {
-     stmt->write_statement(w);
+      stmt->write_statement(w);
    });
    w.indent_out();
    w.put_indent();
@@ -342,6 +342,95 @@ void static_method::set_class_name(std::string_view class_name) {
 
 class_member::ptr static_method::copy() const {
    return std::make_unique<static_method>(*this);
+}
+
+method_template::method_template(std::string_view return_type,
+                                 std::string_view name,
+                                 std::vector<arg> template_arguments,
+                                 std::vector<arg> arguments,
+                                 std::function<void(statement::collector &)> statement_gen) : m_return_type(return_type),
+                                                                                              m_name(name),
+                                                                                              m_template_arguments(std::move(template_arguments)),
+                                                                                              m_arguments(std::move(arguments)),
+                                                                                              m_statements([&statement_gen]() {
+                                                                                                 statement::collector col;
+                                                                                                 statement_gen(col);
+                                                                                                 return col.build();
+                                                                                              }()),
+                                                                                              m_const(false) {}
+
+method_template::method_template(std::string_view return_type,
+                                 std::string_view name,
+                                 std::vector<arg> template_arguments,
+                                 std::vector<arg> arguments,
+                                 bool constant,
+                                 std::function<void(statement::collector &)> statement_gen) : m_return_type(return_type),
+                                                                                              m_name(name),
+                                                                                              m_template_arguments(std::move(template_arguments)),
+                                                                                              m_arguments(std::move(arguments)),
+                                                                                              m_statements([&statement_gen]() {
+                                                                                                 statement::collector col;
+                                                                                                 statement_gen(col);
+                                                                                                 return col.build();
+                                                                                              }()),
+                                                                                              m_const(constant) {}
+
+method_template::method_template(const method_template &other) : m_return_type(other.m_return_type),
+                                                                 m_name(other.m_name),
+                                                                 m_arguments(other.m_arguments),
+                                                                 m_template_arguments(other.m_template_arguments),
+                                                                 m_const(other.m_const) {
+   m_statements.reserve(other.m_statements.size());
+   std::transform(other.m_statements.begin(), other.m_statements.end(), std::back_inserter(m_statements), [](const statement::ptr &stmt) {
+      return stmt->copy();
+   });
+}
+
+void method_template::write_declaration(writer &w) const {
+   w.write("\n");
+   w.put_indent();
+   w.write("template<");
+   if (!m_template_arguments.empty()) {
+      auto it_first = m_template_arguments.begin();
+      w.write("{} {}", it_first->type, it_first->name);
+      std::for_each(it_first + 1, m_template_arguments.end(), [&w](const arg &arg) {
+        w.write(", {} {}", arg.type, arg.name);
+      });
+   }
+   w.write(">\n");
+   w.put_indent();
+   w.write("{} {}(", m_return_type, m_name);
+   if (!m_arguments.empty()) {
+      auto it_first = m_arguments.begin();
+      w.write("{} {}", it_first->type, it_first->name);
+      std::for_each(it_first + 1, m_arguments.end(), [&w](const arg &arg) {
+        w.write(", {} {}", arg.type, arg.name);
+      });
+   }
+   if (m_const) {
+      w.write(") const {\n");
+   } else {
+      w.write(") {\n");
+   }
+   w.indent_in();
+   std::for_each(m_statements.begin(), m_statements.end(), [&w](const statement::ptr &stmt) {
+     stmt->write_statement(w);
+   });
+   w.indent_out();
+   w.put_indent();
+   w.write("}\n\n");
+}
+
+void method_template::write_definition(writer &w) const {
+   // nothing here
+}
+
+void method_template::set_class_name(std::string_view class_name) {
+   // nothing here
+}
+
+class_member::ptr method_template::copy() const {
+   return std::make_unique<method_template>(*this);
 }
 
 }// namespace mb::codegen

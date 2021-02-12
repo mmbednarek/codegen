@@ -64,6 +64,17 @@ TEST(codegen, classes) {
      });
      col << expr(call("std::transform", call("args.begin"), call("args.end"), call("target.begin"), for_each_lam));
    }));
+   c.add_public(method_template("int", "do_stuff", {{"typename", "T"}}, {{"int", "a"}, {"float", "b"}}, true, [](statement::collector &col) {
+     lambda lam({{"int", "v"}}, [](statement::collector &col) {
+       col << expr(raw("return v * a * {} - 1", "b"));
+     }, raw("a"), raw("b"));
+     col << expr(call("foobar", lam));
+     col << expr(raw("return a + (int)b"));
+     lambda for_each_lam({{"const int", "&val"}}, [](statement::collector &col) {
+       col << expr(raw("stuff"));
+     });
+     col << expr(call("std::transform", call("args.begin"), call("args.end"), call("target.begin"), for_each_lam));
+   }));
 
    struct_constructor constr1;
    constr1.add(raw("2"));
