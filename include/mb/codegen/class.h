@@ -61,6 +61,24 @@ class method : public class_member {
    [[nodiscard]] ptr copy() const override;
 };
 
+class static_method : public class_member {
+ private:
+   std::string_view m_return_type;
+   std::string_view m_class_name;
+   std::string_view m_name;
+   std::vector<arg> m_arguments;
+   std::vector<statement::ptr> m_statements;
+
+ public:
+   static_method(std::string_view return_type, std::string_view name, std::vector<arg> arguments, std::function<void(statement::collector &)> statement_gen);
+   static_method(const static_method &other);
+
+   void write_declaration(writer &w) const override;
+   void write_definition(writer &w) const override;
+   void set_class_name(std::string_view class_name) override;
+   [[nodiscard]] ptr copy() const override;
+};
+
 class default_constructor : public class_member {
    std::string_view m_class_name;
  public:

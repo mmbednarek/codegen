@@ -77,7 +77,7 @@ TEST(codegen, classes) {
    something.add(constr2);
 
    c.add_public(static_attribute("std::vector<std::vector<int>>", "something", something));
-   c.add_private(method("void", "do_something_else", {}, [](statement::collector &col) {
+   c.add_private(static_method("void", "do_something_else", {}, [](statement::collector &col) {
       col << expr(call("do_stuff", raw("3"), raw("0.4")));
       col << if_statement(
               raw("a == b"),
