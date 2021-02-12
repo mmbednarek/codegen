@@ -37,7 +37,7 @@ void component::write_header(std::ostream &stream) {
       if (!left.local && right.local) {
          return 1;
       }
-      return right.path.compare(left.path);
+     return left.path.compare(right.path);
    });
 
    if (!m_header_constant.empty()) {
@@ -79,7 +79,7 @@ void component::write_source(std::ostream &stream) {
       if (!left.local && right.local) {
          return 1;
       }
-      return right.path.compare(left.path);
+      return left.path.compare(right.path);
    });
 
    std::for_each(m_source_includes.begin(), m_source_includes.end(), [&w](const include &inc) {
