@@ -60,6 +60,8 @@ class switch_statement : public statement {
    };
    expression::ptr m_value;
    std::vector<case_statement> m_cases;
+   std::vector<statement::ptr> m_default_case;
+   bool m_default_case_scope{true};
 
  public:
    explicit switch_statement(const expression &value);
@@ -67,6 +69,8 @@ class switch_statement : public statement {
 
    void add(const expression &case_expr, std::function<void(statement::collector &)> statements);
    void add_noscope(const expression &case_expr, std::function<void(statement::collector &)> statements);
+   void add_default(std::function<void(statement::collector &)> statements);
+   void add_default_noscope(std::function<void(statement::collector &)> statements);
 
    void write_statement(writer &w) const override;
    ptr copy() const override;

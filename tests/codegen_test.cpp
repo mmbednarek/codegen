@@ -105,6 +105,9 @@ TEST(codegen, classes) {
                  some_switch.add(raw("4"), [](statement::collector &col) {
                     col << call("something_else");
                  });
+                 some_switch.add_default_noscope([](statement::collector &col) {
+                   col << call("foobar");
+                 });
                  col << some_switch;
               },
               [](statement::collector &col) {// else

@@ -109,7 +109,13 @@ statement::ptr if_statement::copy() const {
 switch_statement::switch_statement(const expression &value) : m_value(value.copy()) {}
 
 switch_statement::switch_statement(const switch_statement &other) : m_value(other.m_value->copy()),
-                                                                    m_cases(other.m_cases) {}
+                                                                    m_cases(other.m_cases),
+                                                                    m_default_case(other.m_default_case.size()),
+                                                                    m_default_case_scope(other.m_default_case_scope) {
+   std::transform(other.m_default_case.begin(), other.m_default_case.end(), m_default_case.begin(), [](const statement::ptr &stmt) {
+      return stmt->copy();
+   });
+}
 
 void switch_statement::add(const expression &case_expr, std::function<void(statement::collector &)> statements) {
    m_cases.emplace_back(case_statement(case_expr, [&statements]() {
@@ -156,12 +162,42 @@ void switch_statement::write_statement(writer &w) const {
          w.write("}\n");
       }
    });
+   if (!m_default_case.empty()) {
+      w.put_indent();
+      if (m_default_case_scope) {
+         w.write("default: {\n");
+      } else {
+         w.write("default: \n");
+      }
+      w.indent_in();
+      std::for_each(m_default_case.begin(), m_default_case.end(), [&w](const statement::ptr &stmt) {
+         stmt->write_statement(w);
+      });
+      w.indent_out();
+      if (m_default_case_scope) {
+         w.put_indent();
+         w.write("}\n");
+      }
+   }
    w.put_indent();
    w.write("}\n");
 }
 
 statement::ptr switch_statement::copy() const {
    return std::make_unique<switch_statement>(*this);
+}
+
+void switch_statement::add_default(std::function<void(statement::collector &)> statements) {
+   m_default_case = [&statements]() {
+      statement::collector col;
+      statements(col);
+      return col.build();
+   }();
+}
+
+void switch_statement::add_default_noscope(std::function<void(statement::collector &)> statements) {
+   m_default_case_scope = false;
+   add_default(std::move(statements));
 }
 
 switch_statement::case_statement::case_statement(const switch_statement::case_statement &other) : m_case(other.m_case->copy()),
