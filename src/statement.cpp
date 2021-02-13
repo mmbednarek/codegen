@@ -196,4 +196,44 @@ void return_statement::write_statement(writer &w) const {
 statement::ptr return_statement::copy() const {
    return std::make_unique<return_statement>(*this);
 }
+
+for_statement::for_statement(const expression &start, const expression &condition, const expression &progress, std::function<void(statement::collector &)> body) : m_start(start.copy()),
+                                                                                                                                                                   m_condition(condition.copy()),
+                                                                                                                                                                   m_progress(progress.copy()),
+                                                                                                                                                                   m_body([&body]() {
+                                                                                                                                                                      statement::collector col;
+                                                                                                                                                                      body(col);
+                                                                                                                                                                      return col.build();
+                                                                                                                                                                   }()) {}
+for_statement::for_statement(const for_statement &other) : m_start(other.m_start->copy()),
+                                                           m_condition(other.m_condition->copy()),
+                                                           m_progress(other.m_progress->copy()),
+                                                           m_body(other.m_body.size()) {
+   std::transform(other.m_body.begin(), other.m_body.end(), m_body.begin(), [](const statement::ptr &stmt) {
+      return stmt->copy();
+   });
+}
+
+void for_statement::write_statement(writer &w) const {
+   w.put_indent();
+   w.write("for (");
+   m_start->write_expression(w);
+   w.write("; ");
+   m_condition->write_expression(w);
+   w.write("; ");
+   m_progress->write_expression(w);
+   w.write(") {\n");
+   w.indent_in();
+   std::for_each(m_body.begin(), m_body.end(), [&w](const statement::ptr &stmt) {
+      stmt->write_statement(w);
+   });
+   w.indent_out();
+   w.put_indent();
+   w.write("}\n\n");
+}
+
+statement::ptr for_statement::copy() const {
+   return std::make_unique<for_statement>(*this);
+}
+
 }// namespace mb::codegen

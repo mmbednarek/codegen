@@ -83,6 +83,19 @@ class return_statement : public statement {
    ptr copy() const override;
 };
 
+class for_statement : public statement {
+   expression::ptr m_start;
+   expression::ptr m_condition;
+   expression::ptr m_progress;
+   std::vector<statement::ptr> m_body;
+ public:
+   for_statement(const expression& start, const expression &condition, const expression &progress, std::function<void(statement::collector &)> body);
+   for_statement(const for_statement &other);
+
+   void write_statement(writer &w) const override;
+   ptr copy() const override;
+};
+
 }// namespace mb::codegen
 
 #endif//LIBMB_STATEMENT_H

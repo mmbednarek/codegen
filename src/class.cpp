@@ -30,7 +30,7 @@ void class_spec::write_declaration(writer &w) const {
       attirb->write_declaration(w);
    });
    w.indent_out();
-   w.write("public:\n");
+   w.write(" public:\n");
    w.indent_in();
    std::for_each(m_public_attributes.begin(), m_public_attributes.end(), [&w](const attribute &attr) {
       w.put_indent();

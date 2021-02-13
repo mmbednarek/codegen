@@ -179,6 +179,9 @@ TEST(codegen, full) {
                     col << call("something_else");
                  });
                  col << some_switch;
+                 col << for_statement(raw("int i = 0"), raw("i < 10"), raw("++i"), [](statement::collector &col) {
+                    col << call("aaaaa");
+                 });
               },
               [](statement::collector &col) {// else
                  col << call("something_else");

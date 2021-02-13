@@ -35,7 +35,7 @@ void lambda::write_expression(writer &w) const {
         cap->write_expression(w);
       });
    }
-   w.write("] (");
+   w.write("](");
    if (!m_arguments.empty()) {
       auto it_first = m_arguments.begin();
       w.write("{} {}", it_first->type, it_first->name);
