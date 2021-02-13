@@ -265,7 +265,7 @@ void for_statement::write_statement(writer &w) const {
    });
    w.indent_out();
    w.put_indent();
-   w.write("}\n\n");
+   w.write("}\n");
 }
 
 statement::ptr for_statement::copy() const {
