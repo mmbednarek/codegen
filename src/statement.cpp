@@ -82,7 +82,11 @@ void if_statement::write_statement(writer &w) const {
       return;
    }
    w.put_indent();
-   w.write("if (");
+   w.write("if ");
+   if (m_constexpr) {
+      w.write("constexpr ");
+   }
+   w.write("(");
    m_condition->write_expression(w);
    w.write(") {\n");
    w.indent_in();
