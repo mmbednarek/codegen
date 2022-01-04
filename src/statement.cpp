@@ -51,7 +51,8 @@ if_statement::if_statement(const expression &condition, std::function<void(state
                                                                                                                                                                     }()) {}
 if_statement::if_statement(const if_statement &other) : m_condition(other.m_condition->copy()),
                                                         m_if_then(other.m_if_then.size()),
-                                                        m_if_else(other.m_if_else.size()) {
+                                                        m_if_else(other.m_if_else.size()),
+                                                        m_constexpr(other.m_constexpr) {
    std::transform(other.m_if_then.begin(), other.m_if_then.end(), m_if_then.begin(), [](const statement::ptr &stmt) {
       return stmt->copy();
    });
