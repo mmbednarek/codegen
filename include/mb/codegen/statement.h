@@ -38,11 +38,17 @@ class if_statement : public statement {
    expression::ptr m_condition;
    std::vector<statement::ptr> m_if_then;
    std::vector<statement::ptr> m_if_else;
+   bool m_constexpr = false;
 
  public:
    if_statement(const expression &condition, std::function<void(statement::collector &)> if_then);
    if_statement(const expression &condition, std::function<void(statement::collector &)> if_then, std::function<void(statement::collector &)> if_else);
    if_statement(const if_statement &other);
+
+   constexpr if_statement &with_constexpr() {
+      m_constexpr = true;
+      return *this;
+   }
 
    void write_statement(writer &w) const override;
    ptr copy() const override;
