@@ -3,6 +3,7 @@
 #include "expression.h"
 #include "writer.h"
 #include <memory>
+#include <functional>
 
 namespace mb::codegen {
 

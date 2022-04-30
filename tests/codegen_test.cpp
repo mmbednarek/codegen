@@ -46,7 +46,7 @@ TEST(codegen, function) {
    func.write_declaration(w);
    func.write_definition(w);
 
-   ASSERT_EQ(ss.str(), "   std::string append_strings(std::string a, std::string b);\n   std::string append_strings(std::string a, std::string b) {\n      hello();\n   }\n");
+   ASSERT_EQ(ss.str(), "   std::string append_strings(std::string a, std::string b);\n   std::string append_strings(std::string a, std::string b) {\n      hello();\n   }\n\n");
 }
 
 TEST(codegen, classes) {
