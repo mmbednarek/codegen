@@ -11,7 +11,7 @@ include(FetchContent)
 FetchContent_Declare(
         libmb
         GIT_REPOSITORY https://github.com/mmbednarek/mb
-        GIT_TAG libmb-0.0.20
+        GIT_TAG libmb-0.0.21
 )
 FetchContent_MakeAvailable(libmb)
 
