@@ -21,14 +21,14 @@ public:
     void line(std::string_view sv);
 
     template<typename... Args>
-    void line(std::string_view sv, Args... args) {
+    constexpr void line(fmt::format_string<Args...> sv, Args&&... args) {
         put_indent();
         write(sv, args...);
         line();
     }
 
     template<typename... Args>
-    void line_ignore(std::string_view sv, Args... args) {
+    constexpr void line_ignore(std::string_view sv, Args... args) {
         write(sv, args...);
         line();
     }
@@ -38,8 +38,8 @@ public:
     void write(std::string_view sv);
 
     template<typename... Args>
-    void write(std::string_view sv, Args... args) {
-        m_stream << fmt::format(sv, args...);
+    constexpr void write(fmt::format_string<Args...> sv, Args&&... args) {
+        m_stream << fmt::format(sv, std::forward<Args>(args)...);
     }
 
     template<typename... Args>

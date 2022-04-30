@@ -22,7 +22,7 @@ class raw : public expression {
  public:
    explicit raw(const std::string &contents);
    template<typename... ARGS>
-   explicit raw(const std::string &format, ARGS... args) : m_contents(fmt::format(format, args...)) {}
+   constexpr explicit raw(fmt::format_string<ARGS...> format, ARGS&&... args) : m_contents(fmt::format(format, std::forward<ARGS>(args)...)) {}
 
    void write_expression(writer &w) const override;
    [[nodiscard]] ptr copy() const override;

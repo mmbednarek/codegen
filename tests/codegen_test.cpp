@@ -200,3 +200,17 @@ TEST(codegen, full) {
    std::cerr << "// source.cpp\n\n";
    cmp.write_source(std::cerr);
 }
+
+TEST(codegen, fmttest) {
+   using namespace mb::codegen;
+
+   component cmp("mb::foo::bar", "MB_FOO_BAR_H");
+   cmp << function("void", "foo", std::vector<arg>(),  [](statement::collector &col) {
+     col << raw("stuff: {}", 3);
+   });
+
+   std::stringstream ss;
+   cmp.write_source(ss);
+
+   std::cout << ss.str();
+}
