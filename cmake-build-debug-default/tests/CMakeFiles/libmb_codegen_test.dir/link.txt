@@ -1,0 +1,1 @@
+/usr/bin/c++ -g CMakeFiles/libmb_codegen_test.dir/codegen_test.cpp.o -o libmb_codegen_test  ../_deps/libmb-build/liblibmb.a ../liblibmb_codegen.a -lgtest -lgtest_main ../_deps/libmb-build/liblibmb.a -lfmt 

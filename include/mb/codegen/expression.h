@@ -21,8 +21,13 @@ class raw : public expression {
 
  public:
    explicit raw(const std::string &contents);
+#if FMT_GCC_VERSION && FMT_GCC_VERSION < 409
+   template<typename... ARGS>
+   constexpr explicit raw(const std::string_view format, ARGS&&... args) : m_contents(fmt::format(format, std::forward<ARGS>(args)...)) {}
+#else
    template<typename... ARGS>
    constexpr explicit raw(fmt::format_string<ARGS...> format, ARGS&&... args) : m_contents(fmt::format(format, std::forward<ARGS>(args)...)) {}
+#endif
 
    void write_expression(writer &w) const override;
    [[nodiscard]] ptr copy() const override;

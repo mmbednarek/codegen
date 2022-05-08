@@ -8,69 +8,79 @@
 namespace mb::codegen {
 
 class writer {
-    std::ostream &m_stream;
-    mb::u32 m_indent = 0;
+   std::ostream &m_stream;
+   mb::u32 m_indent = 0;
 
-public:
-    explicit writer(std::ostream &m_stream);
+ public:
+   explicit writer(std::ostream &m_stream);
 
-    void indent_in();
-    void indent_out();
+   void indent_in();
+   void indent_out();
 
-    void line();
-    void line(std::string_view sv);
+   void line();
+   void line(std::string_view sv);
 
-    template<typename... Args>
-    constexpr void line(fmt::format_string<Args...> sv, Args&&... args) {
-        put_indent();
-        write(sv, args...);
-        line();
-    }
+#if FMT_GCC_VERSION && FMT_GCC_VERSION < 409
+   template<typename... Args>
+   constexpr void line(const std::string_view sv, Args &&...args) {
+#else
+   template<typename... Args>
+   constexpr void line(fmt::format_string<Args...> sv, Args &&...args) {
+#endif
+      put_indent();
+      write(sv, args...);
+      line();
+   }
 
-    template<typename... Args>
-    constexpr void line_ignore(std::string_view sv, Args... args) {
-        write(sv, args...);
-        line();
-    }
+   template<typename... Args>
+   constexpr void line_ignore(std::string_view sv, Args... args) {
+      write(sv, args...);
+      line();
+   }
 
-    void put_indent();
+   void put_indent();
 
-    void write(std::string_view sv);
+   void write(std::string_view sv);
 
-    template<typename... Args>
-    constexpr void write(fmt::format_string<Args...> sv, Args&&... args) {
-        m_stream << fmt::format(sv, std::forward<Args>(args)...);
-    }
+#if FMT_GCC_VERSION && FMT_GCC_VERSION < 409
+   template<typename... Args>
+   constexpr void write(std::string_view sv, Args &&...args) {
+#else
+   template<typename... Args>
+   constexpr void write(fmt::format_string<Args...> sv, Args &&...args) {
+#endif
+      m_stream << fmt::format(sv, std::forward<Args>(args)...);
+   }
 
-    template<typename... Args>
-    void scope(std::string_view sv, Args... args) {
-        put_indent();
-        write(sv, args...);
-        write(" {\n");
-        indent_in();
-    }
+   template<typename... Args>
+   void scope(std::string_view sv, Args... args) {
+      put_indent();
+      write(sv, args...);
+      write(" {\n");
+      indent_in();
+   }
 
-    template<typename... Args>
-    void flat_scope(std::string_view sv, Args... args) {
-        put_indent();
-        write(sv, args...);
-        write(" {\n");
-    }
+   template<typename... Args>
+   void flat_scope(std::string_view sv, Args... args) {
+      put_indent();
+      write(sv, args...);
+      write(" {\n");
+   }
 
-    void descope();
+   void descope();
 
-    template<typename... Args>
-    void descope(std::string_view sv, Args... args) {
-        indent_out();
-        put_indent();
-        write("}");
-        write(sv, args...);
-        line();
-    }
+   template<typename... Args>
+   void descope(std::string_view sv, Args... args) {
+      indent_out();
+      put_indent();
+      write("}");
+      write(sv, args...);
+      line();
+   }
 
-    void descope_flat();
+   void descope_flat();
 
-    std::ostream &raw();
+   std::ostream &raw();
 };
 
 }// namespace mb::codegen

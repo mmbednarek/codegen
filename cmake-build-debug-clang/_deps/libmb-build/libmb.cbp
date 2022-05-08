@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6"/>
+	<Project>
+		<Option title="libmb"/>
+		<Option makefile_is_custom="1"/>
+		<Option compiler="clang"/>
+		<Option virtualFolders="CMake Files\;CMake Files\..\;CMake Files\..\..\;CMake Files\..\..\..\;CMake Files\..\..\..\..\;CMake Files\..\..\..\..\usr\;CMake Files\..\..\..\..\usr\lib64\;CMake Files\..\..\..\..\usr\lib64\cmake\;CMake Files\..\..\..\..\usr\lib64\cmake\fmt\;CMake Files\..\..\..\..\usr\lib64\cmake\GTest\;CMake Files\cmake-build-debug-clang\;CMake Files\cmake-build-debug-clang\_deps\;CMake Files\cmake-build-debug-clang\_deps\libmb-src\;CMake Files\tests\;"/>
+		<Build>
+			<Target title="all">
+				<Option working_dir="/home/ego/projects/codegen/cmake-build-debug-clang/_deps/libmb-build"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j24 -f &quot;/home/ego/projects/codegen/cmake-build-debug-clang/_deps/libmb-build/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="/usr/bin/make -j24 -f &quot;/home/ego/projects/codegen/cmake-build-debug-clang/_deps/libmb-build/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j24 -f &quot;/home/ego/projects/codegen/cmake-build-debug-clang/_deps/libmb-build/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j24 -f &quot;/home/ego/projects/codegen/cmake-build-debug-clang/_deps/libmb-build/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="libmb">
+				<Option output="/home/ego/projects/codegen/cmake-build-debug-clang/_deps/libmb-build/liblibmb.a" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/ego/projects/codegen/cmake-build-debug-clang/_deps/libmb-build"/>
+				<Option object_output="./"/>
+				<Option type="2"/>
+				<Option compiler="clang"/>
+				<Compiler>
+					<Add directory="/home/ego/projects/codegen/cmake-build-debug-clang/_deps/libmb-src/include"/>
+					<Add directory="/usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/11.2.0/../../../../include/c++/11.2.0"/>
+					<Add directory="/usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/11.2.0/../../../../include/c++/11.2.0/x86_64-pc-linux-gnu"/>
+					<Add directory="/usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/11.2.0/../../../../include/c++/11.2.0/backward"/>
+					<Add directory="/usr/lib/clang/13.0.1/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j24 -f &quot;/home/ego/projects/codegen/cmake-build-debug-clang/_deps/libmb-build/Makefile&quot;  VERBOSE=1 libmb"/>
+					<CompileFile command="/usr/bin/make -j24 -f &quot;/home/ego/projects/codegen/cmake-build-debug-clang/_deps/libmb-build/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j24 -f &quot;/home/ego/projects/codegen/cmake-build-debug-clang/_deps/libmb-build/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j24 -f &quot;/home/ego/projects/codegen/cmake-build-debug-clang/_deps/libmb-build/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="libmb/fast">
+				<Option output="/home/ego/projects/codegen/cmake-build-debug-clang/_deps/libmb-build/liblibmb.a" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/ego/projects/codegen/cmake-build-debug-clang/_deps/libmb-build"/>
+				<Option object_output="./"/>
+				<Option type="2"/>
+				<Option compiler="clang"/>
+				<Compiler>
+					<Add directory="/home/ego/projects/codegen/cmake-build-debug-clang/_deps/libmb-src/include"/>
+					<Add directory="/usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/11.2.0/../../../../include/c++/11.2.0"/>
+					<Add directory="/usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/11.2.0/../../../../include/c++/11.2.0/x86_64-pc-linux-gnu"/>
+					<Add directory="/usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/11.2.0/../../../../include/c++/11.2.0/backward"/>
+					<Add directory="/usr/lib/clang/13.0.1/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j24 -f &quot;/home/ego/projects/codegen/cmake-build-debug-clang/_deps/libmb-build/Makefile&quot;  VERBOSE=1 libmb/fast"/>
+					<CompileFile command="/usr/bin/make -j24 -f &quot;/home/ego/projects/codegen/cmake-build-debug-clang/_deps/libmb-build/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j24 -f &quot;/home/ego/projects/codegen/cmake-build-debug-clang/_deps/libmb-build/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j24 -f &quot;/home/ego/projects/codegen/cmake-build-debug-clang/_deps/libmb-build/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+		</Build>
+		<Unit filename="/home/ego/projects/codegen/cmake-build-debug-clang/_deps/libmb-src/include/mb/core.h">
+			<Option target="libmb"/>
+		</Unit>
+		<Unit filename="/home/ego/projects/codegen/cmake-build-debug-clang/_deps/libmb-src/include/mb/error.h">
+			<Option target="libmb"/>
+		</Unit>
+		<Unit filename="/home/ego/projects/codegen/cmake-build-debug-clang/_deps/libmb-src/include/mb/int.h">
+			<Option target="libmb"/>
+		</Unit>
+		<Unit filename="/home/ego/projects/codegen/cmake-build-debug-clang/_deps/libmb-src/include/mb/result.h">
+			<Option target="libmb"/>
+		</Unit>
+		<Unit filename="/home/ego/projects/codegen/cmake-build-debug-clang/_deps/libmb-src/include/mb/view.h">
+			<Option target="libmb"/>
+		</Unit>
+		<Unit filename="/home/ego/projects/codegen/cmake-build-debug-clang/_deps/libmb-src/src/core.cpp">
+			<Option target="libmb"/>
+		</Unit>
+		<Unit filename="/home/ego/projects/codegen/cmake-build-debug-clang/_deps/libmb-src/src/error.cpp">
+			<Option target="libmb"/>
+		</Unit>
+		<Unit filename="/home/ego/projects/codegen/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\"/>
+		</Unit>
+		<Unit filename="/home/ego/projects/codegen/../../../../usr/lib64/cmake/fmt/fmt-config-version.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\usr\lib64\cmake\fmt\"/>
+		</Unit>
+		<Unit filename="/home/ego/projects/codegen/../../../../usr/lib64/cmake/fmt/fmt-config.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\usr\lib64\cmake\fmt\"/>
+		</Unit>
+		<Unit filename="/home/ego/projects/codegen/../../../../usr/lib64/cmake/fmt/fmt-targets-none.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\usr\lib64\cmake\fmt\"/>
+		</Unit>
+		<Unit filename="/home/ego/projects/codegen/../../../../usr/lib64/cmake/fmt/fmt-targets.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\usr\lib64\cmake\fmt\"/>
+		</Unit>
+		<Unit filename="/home/ego/projects/codegen/../../../../usr/lib64/cmake/GTest/GTestConfig.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\usr\lib64\cmake\GTest\"/>
+		</Unit>
+		<Unit filename="/home/ego/projects/codegen/../../../../usr/lib64/cmake/GTest/GTestConfigVersion.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\usr\lib64\cmake\GTest\"/>
+		</Unit>
+		<Unit filename="/home/ego/projects/codegen/../../../../usr/lib64/cmake/GTest/GTestTargets-noconfig.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\usr\lib64\cmake\GTest\"/>
+		</Unit>
+		<Unit filename="/home/ego/projects/codegen/../../../../usr/lib64/cmake/GTest/GTestTargets.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\usr\lib64\cmake\GTest\"/>
+		</Unit>
+		<Unit filename="/home/ego/projects/codegen/cmake-build-debug-clang/_deps/libmb-src/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\cmake-build-debug-clang\_deps\libmb-src\"/>
+		</Unit>
+		<Unit filename="/home/ego/projects/codegen/tests/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\tests\"/>
+		</Unit>
+	</Project>
+</CodeBlocks_project_file>
