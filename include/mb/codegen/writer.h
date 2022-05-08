@@ -20,7 +20,7 @@ class writer {
    void line();
    void line(std::string_view sv);
 
-#if FMT_GCC_VERSION && FMT_GCC_VERSION < 409
+#if FMT_VERSION && FMT_VERSION < 80000
    template<typename... Args>
    constexpr void line(const std::string_view sv, Args &&...args) {
 #else
@@ -42,7 +42,7 @@ class writer {
 
    void write(std::string_view sv);
 
-#if FMT_GCC_VERSION && FMT_GCC_VERSION < 409
+#if FMT_VERSION && FMT_VERSION < 80000
    template<typename... Args>
    constexpr void write(std::string_view sv, Args &&...args) {
 #else

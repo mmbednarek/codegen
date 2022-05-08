@@ -21,7 +21,7 @@ class raw : public expression {
 
  public:
    explicit raw(const std::string &contents);
-#if FMT_GCC_VERSION && FMT_GCC_VERSION < 409
+#if FMT_VERSION && FMT_VERSION < 80000
    template<typename... ARGS>
    constexpr explicit raw(const std::string_view format, ARGS&&... args) : m_contents(fmt::format(format, std::forward<ARGS>(args)...)) {}
 #else
