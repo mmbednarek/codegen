@@ -1,3 +1,0 @@
-repository='https://github.com/mmbednarek/mb'
-module=''
-tag='origin'

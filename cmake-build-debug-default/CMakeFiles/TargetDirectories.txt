@@ -1,9 +1,0 @@
-/home/ego/projects/codegen/cmake-build-debug-default/CMakeFiles/libmb_codegen.dir
-/home/ego/projects/codegen/cmake-build-debug-default/CMakeFiles/edit_cache.dir
-/home/ego/projects/codegen/cmake-build-debug-default/CMakeFiles/rebuild_cache.dir
-/home/ego/projects/codegen/cmake-build-debug-default/_deps/libmb-build/CMakeFiles/libmb.dir
-/home/ego/projects/codegen/cmake-build-debug-default/_deps/libmb-build/CMakeFiles/edit_cache.dir
-/home/ego/projects/codegen/cmake-build-debug-default/_deps/libmb-build/CMakeFiles/rebuild_cache.dir
-/home/ego/projects/codegen/cmake-build-debug-default/tests/CMakeFiles/libmb_codegen_test.dir
-/home/ego/projects/codegen/cmake-build-debug-default/tests/CMakeFiles/edit_cache.dir
-/home/ego/projects/codegen/cmake-build-debug-default/tests/CMakeFiles/rebuild_cache.dir

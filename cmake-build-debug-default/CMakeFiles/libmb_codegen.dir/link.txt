@@ -1,2 +1,0 @@
-/usr/bin/ar qc liblibmb_codegen.a CMakeFiles/libmb_codegen.dir/src/class.cpp.o CMakeFiles/libmb_codegen.dir/src/definable.cpp.o CMakeFiles/libmb_codegen.dir/src/expression.cpp.o CMakeFiles/libmb_codegen.dir/src/statement.cpp.o CMakeFiles/libmb_codegen.dir/src/writer.cpp.o CMakeFiles/libmb_codegen.dir/src/lambda.cpp.o CMakeFiles/libmb_codegen.dir/src/component.cpp.o
-/usr/bin/ranlib liblibmb_codegen.a
