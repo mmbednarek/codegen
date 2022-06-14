@@ -130,8 +130,9 @@ expression::ptr method_call::copy() const {
 deref::deref(const expression &value) : m_value(value.copy()) {}
 
 void deref::write_expression(writer &w) const {
-   w.write("*");
+   w.write("(*");
    m_value->write_expression(w);
+   w.write(")");
 }
 
 expression::ptr deref::copy() const {
