@@ -95,6 +95,16 @@ class struct_constructor : public expression {
    [[nodiscard]] ptr copy() const override;
 };
 
+class deref : public expression {
+   expression::ptr m_value;
+
+ public:
+   explicit deref(const expression &value);
+
+   void write_expression(writer &w) const override;
+   [[nodiscard]] ptr copy() const override;
+};
+
 }// namespace mb::codegen
 
 #endif//LIBMB_EXPRESSION_H

@@ -127,4 +127,15 @@ expression::ptr method_call::copy() const {
    return std::make_unique<method_call>(*this);
 }
 
+deref::deref(const expression &value) : m_value(value.copy()) {}
+
+void deref::write_expression(writer &w) const {
+   w.write("*");
+   m_value->write_expression(w);
+}
+
+expression::ptr deref::copy() const {
+   return std::make_unique<deref>(*m_value);
+}
+
 }// namespace mb::codegen
