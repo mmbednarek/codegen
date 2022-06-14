@@ -95,10 +95,9 @@ class struct_constructor : public expression {
    [[nodiscard]] ptr copy() const override;
 };
 
-class deref : public expression {
+struct deref : public expression {
    expression::ptr m_value;
 
- public:
    explicit deref(const expression &value);
 
    void write_expression(writer &w) const override;

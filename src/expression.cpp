@@ -108,8 +108,14 @@ method_call::method_call(const method_call &other) : m_object(other.m_object->co
 }
 
 void method_call::write_expression(writer &w) const {
-   m_object->write_expression(w);
-   w.write(".");
+   if (auto *deref_val = dynamic_cast<deref*>(m_object.get()); deref_val != nullptr) {
+      deref_val->m_value->write_expression(w);
+      w.write("->");
+   } else {
+      m_object->write_expression(w);
+      w.write(".");
+   }
+
    w.write(m_method_name);
    w.write("(");
    if (!m_arguments.empty()) {
@@ -130,9 +136,8 @@ expression::ptr method_call::copy() const {
 deref::deref(const expression &value) : m_value(value.copy()) {}
 
 void deref::write_expression(writer &w) const {
-   w.write("(*");
+   w.write("*");
    m_value->write_expression(w);
-   w.write(")");
 }
 
 expression::ptr deref::copy() const {
