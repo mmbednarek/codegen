@@ -11,7 +11,6 @@ struct attribute {
 
    attribute() = default;
    attribute(std::string type, std::string name, bool default_const = true);
-   attribute(const attribute &other);
 };
 
 class class_member {

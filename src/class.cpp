@@ -7,10 +7,6 @@ attribute::attribute(std::string type, std::string name, bool default_const) : t
                                                                                name(std::move(name)),
                                                                                default_constr(default_const) {}
 
-attribute::attribute(const attribute &other) : type(other.type),
-                                               name(other.name),
-                                               default_constr(other.default_constr) {}
-
 void class_spec::write_declaration(writer &w) const {
    if (!m_class_constant.empty()) {
       w.write("#ifndef {}\n#define {}\n", m_class_constant, m_class_constant);
@@ -99,16 +95,16 @@ void class_spec::add_private(const class_member &member) {
 }
 
 void class_spec::add_public(std::string_view type, std::string_view name) {
-   m_public_attributes.emplace_back(attribute(std::string(type), std::string(name)));
+   m_public_attributes.emplace_back(std::string(type), std::string(name));
 }
 
 void class_spec::add_private(std::string_view type, std::string_view name) {
-   m_private_attributes.emplace_back(attribute(std::string(type), std::string(name)));
+   m_private_attributes.emplace_back(std::string(type), std::string(name));
 }
 
 method::method(const method &other) : m_return_type(other.m_return_type),
-                                      m_name(other.m_name),
                                       m_class_name(other.m_class_name),
+                                      m_name(other.m_name),
                                       m_arguments(other.m_arguments),
                                       m_const(other.m_const) {
    m_statements.reserve(other.m_statements.size());
@@ -285,7 +281,7 @@ void default_constructor::write_declaration(writer &w) const {
    w.write("{}() = default;\n", m_class_name);
 }
 
-void default_constructor::write_definition(writer &w) const {
+void default_constructor::write_definition(writer & /*w*/) const {
    // nothing here
 }
 
@@ -310,8 +306,8 @@ static_method::static_method(std::string_view return_type,
                                                                                           }()) {}
 
 static_method::static_method(const static_method &other) : m_return_type(other.m_return_type),
-                                                           m_name(other.m_name),
                                                            m_class_name(other.m_class_name),
+                                                           m_name(other.m_name),
                                                            m_arguments(other.m_arguments) {
    m_statements.reserve(other.m_statements.size());
    std::transform(other.m_statements.begin(), other.m_statements.end(), std::back_inserter(m_statements), [](const statement::ptr &stmt) {
@@ -393,8 +389,8 @@ method_template::method_template(std::string_view return_type,
 
 method_template::method_template(const method_template &other) : m_return_type(other.m_return_type),
                                                                  m_name(other.m_name),
-                                                                 m_arguments(other.m_arguments),
                                                                  m_template_arguments(other.m_template_arguments),
+                                                                 m_arguments(other.m_arguments),
                                                                  m_const(other.m_const) {
    m_statements.reserve(other.m_statements.size());
    std::transform(other.m_statements.begin(), other.m_statements.end(), std::back_inserter(m_statements), [](const statement::ptr &stmt) {
@@ -437,11 +433,11 @@ void method_template::write_declaration(writer &w) const {
    w.write("}\n\n");
 }
 
-void method_template::write_definition(writer &w) const {
+void method_template::write_definition(writer &/*w*/) const {
    // nothing here
 }
 
-void method_template::set_class_name(std::string class_name) {
+void method_template::set_class_name(std::string /*class_name*/) {
    // nothing here
 }
 
