@@ -7,7 +7,7 @@ namespace mb::codegen {
 struct attribute {
    std::string type;
    std::string name;
-   bool default_constr;
+   bool default_constr{};
 
    attribute() = default;
    attribute(std::string type, std::string name, bool default_const = true);
@@ -17,6 +17,8 @@ struct attribute {
 class class_member {
  public:
    using ptr = std::unique_ptr<class_member>;
+
+   virtual ~class_member() noexcept = default;
 
    virtual void write_declaration(writer &w) const = 0;
    virtual void write_definition(writer &w) const = 0;
@@ -31,6 +33,7 @@ class class_spec : public definable {
    std::vector<attribute> m_public_attributes;
    std::vector<attribute> m_private_attributes;
    std::string m_class_constant;
+
  public:
    explicit class_spec(std::string name);
    explicit class_spec(std::string name, std::string constant);
@@ -114,7 +117,7 @@ class default_constructor : public class_member {
    void write_declaration(writer &w) const override;
    void write_definition(writer &w) const override;
    void set_class_name(std::string class_name) override;
-   ptr copy() const override;
+   [[nodiscard]] ptr copy() const override;
 };
 
 class constructor : public class_member {

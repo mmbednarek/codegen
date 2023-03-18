@@ -12,6 +12,8 @@ class expression {
  public:
    using ptr = std::unique_ptr<expression>;
 
+   virtual ~expression() noexcept = default;
+
    virtual void write_expression(writer &w) const = 0;
    [[nodiscard]] virtual expression::ptr copy() const = 0;
 };
@@ -23,10 +25,10 @@ class raw : public expression {
    explicit raw(const std::string &contents);
 #if FMT_VERSION && FMT_VERSION < 80000
    template<typename... ARGS>
-   constexpr explicit raw(const std::string_view format, ARGS&&... args) : m_contents(fmt::format(format, std::forward<ARGS>(args)...)) {}
+   constexpr explicit raw(const std::string_view format, ARGS &&...args) : m_contents(fmt::format(format, std::forward<ARGS>(args)...)) {}
 #else
    template<typename... ARGS>
-   constexpr explicit raw(fmt::format_string<ARGS...> format, ARGS&&... args) : m_contents(fmt::format(format, std::forward<ARGS>(args)...)) {}
+   constexpr explicit raw(fmt::format_string<ARGS...> format, ARGS &&...args) : m_contents(fmt::format(format, std::forward<ARGS>(args)...)) {}
 #endif
 
    void write_expression(writer &w) const override;
@@ -36,6 +38,7 @@ class raw : public expression {
 class call : public expression {
    expression::ptr m_function_name;
    std::vector<expression::ptr> m_arguments;
+
  public:
    template<typename... ARGS>
    explicit call(const std::string &function_name, ARGS &&...args) : m_function_name(raw(function_name).copy()), m_arguments(as_vector_copy<expression::ptr, expression>(args...)) {}
@@ -51,6 +54,7 @@ class method_call : public expression {
    expression::ptr m_object;
    std::string m_method_name;
    std::vector<expression::ptr> m_arguments;
+
  public:
    template<typename... ARGS>
    method_call(const expression &object, std::string method_name, ARGS &&...args) : m_object(object.copy()), m_method_name(std::move(method_name)), m_arguments(as_vector_copy<expression::ptr, expression>(args...)) {}

@@ -11,6 +11,8 @@ class statement {
  public:
    using ptr = std::unique_ptr<statement>;
 
+   virtual ~statement() noexcept = default;
+
    virtual void write_statement(writer &w) const = 0;
    [[nodiscard]] virtual statement::ptr copy() const = 0;
 
