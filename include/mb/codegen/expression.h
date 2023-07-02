@@ -65,7 +65,7 @@ class method_call : public expression {
 };
 
 class assign : public expression {
-   std::string_view m_variable;
+   std::string m_variable;
    expression::ptr m_value;
 
  public:

@@ -50,9 +50,9 @@ class class_spec : public definable {
 
 class method : public class_member {
  private:
-   std::string_view m_return_type;
+   std::string m_return_type;
    std::string m_class_name;
-   std::string_view m_name;
+   std::string m_name;
    std::vector<arg> m_arguments;
    std::vector<statement::ptr> m_statements;
    bool m_const{};
@@ -70,8 +70,8 @@ class method : public class_member {
 
 class method_template : public class_member {
  private:
-   std::string_view m_return_type;
-   std::string_view m_name;
+   std::string m_return_type;
+   std::string m_name;
    std::vector<arg> m_template_arguments;
    std::vector<arg> m_arguments;
    std::vector<statement::ptr> m_statements;
@@ -90,9 +90,9 @@ class method_template : public class_member {
 
 class static_method : public class_member {
  private:
-   std::string_view m_return_type;
+   std::string m_return_type;
    std::string m_class_name;
-   std::string_view m_name;
+   std::string m_name;
    std::vector<arg> m_arguments;
    std::vector<statement::ptr> m_statements;
 
@@ -138,8 +138,8 @@ class constructor : public class_member {
 class static_attribute : public class_member {
  private:
    std::string m_class_name;
-   std::string_view m_type;
-   std::string_view m_name;
+   std::string m_type;
+   std::string m_name;
    expression::ptr m_value;
 
  public:
