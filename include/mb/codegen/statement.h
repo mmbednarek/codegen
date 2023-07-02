@@ -109,6 +109,19 @@ class for_statement : public statement {
    ptr copy() const override;
 };
 
+class ranged_for_statement : public statement {
+   std::string m_item_type;
+   std::string m_value_name;
+   expression::ptr m_range;
+   std::vector<statement::ptr> m_body;
+ public:
+   ranged_for_statement(std::string_view item_type, std::string_view value_name,  const expression& range, std::function<void(statement::collector &)> body);
+   ranged_for_statement(const ranged_for_statement &other);
+
+   void write_statement(writer &w) const override;
+   [[nodiscard]] ptr copy() const override;
+};
+
 }// namespace mb::codegen
 
 #endif//LIBMB_STATEMENT_H

@@ -106,7 +106,7 @@ TEST(codegen, classes) {
                     col << call("something_else");
                  });
                  some_switch.add_default_noscope([](statement::collector &col) {
-                   col << call("foobar");
+                    col << call("foobar");
                  });
                  col << some_switch;
               },
@@ -205,12 +205,38 @@ TEST(codegen, fmttest) {
    using namespace mb::codegen;
 
    component cmp("mb::foo::bar", "MB_FOO_BAR_H");
-   cmp << function("void", "foo", std::vector<arg>(),  [](statement::collector &col) {
-     col << raw("stuff: {}", 3);
+   cmp << function("void", "foo", std::vector<arg>(), [](statement::collector &col) {
+      col << raw("stuff: {}", 3);
    });
 
    std::stringstream ss;
    cmp.write_source(ss);
 
    std::cout << ss.str();
+}
+
+TEST(codegen, ranged_for) {
+   using namespace mb::codegen;
+
+   component cmp("mb::foo::bar");
+
+   cmp << function("void", "foo", std::vector<arg>(), [](statement::collector &col) {
+      col << ranged_for_statement("int", "value", raw("collection"), [](statement::collector &col) {
+         col << raw("hello()");
+      });
+   });
+
+   std::stringstream ss;
+   cmp.write_source(ss);
+
+   EXPECT_EQ(ss.str(), R"(
+namespace mb::foo::bar {
+
+void foo() {
+   for (int value : collection) {
+      hello();
+   }
+}
+
+})");
 }

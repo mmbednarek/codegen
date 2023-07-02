@@ -281,4 +281,44 @@ statement::ptr for_statement::copy() const {
    return std::make_unique<for_statement>(*this);
 }
 
+ranged_for_statement::ranged_for_statement(const ranged_for_statement &other) : m_item_type(other.m_item_type),
+                                                                             m_value_name(other.m_value_name),
+                                                                             m_range(other.m_range->copy()),
+                                                                             m_body(other.m_body.size()) {
+   std::transform(other.m_body.begin(), other.m_body.end(), m_body.begin(), [](const statement::ptr &stmt) {
+      return stmt->copy();
+   });
+}
+
+ranged_for_statement::ranged_for_statement(std::string_view item_type, std::string_view value_name, const expression &range, std::function<void(statement::collector &)> body) : m_item_type(std::string{item_type}),
+                                                                                                                                                                               m_value_name(std::string{value_name}),
+                                                                                                                                                                               m_range(range.copy()),
+                                                                                                                                                                               m_body([&body]() {
+                                                                                                                                                                                  statement::collector col;
+                                                                                                                                                                                  body(col);
+                                                                                                                                                                                  return col.build();
+                                                                                                                                                                               }()) {
+}
+
+void ranged_for_statement::write_statement(writer &w) const {
+   w.put_indent();
+   w.write("for (");
+   w.write(m_item_type);
+   w.write(" ");
+   w.write(m_value_name);
+   w.write(" : ");
+   m_range->write_expression(w);
+   w.write(") {\n");
+   w.indent_in();
+   std::for_each(m_body.begin(), m_body.end(), [&w](const statement::ptr &stmt) {
+      stmt->write_statement(w);
+   });
+   w.indent_out();
+   w.put_indent();
+   w.write("}\n");
+}
+
+statement::ptr ranged_for_statement::copy() const {
+   return std::make_unique<ranged_for_statement>(*this);
+}
 }// namespace mb::codegen
