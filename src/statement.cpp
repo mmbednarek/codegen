@@ -321,4 +321,48 @@ void ranged_for_statement::write_statement(writer &w) const {
 statement::ptr ranged_for_statement::copy() const {
    return std::make_unique<ranged_for_statement>(*this);
 }
+
+if_switch_statement::if_switch_statement(const if_switch_statement &other) {
+   m_cases.reserve(other.m_cases.size());
+   for (const auto &[condition, block]: other.m_cases) {
+      std::vector<statement::ptr> new_block(block.size());
+      std::transform(block.begin(), block.end(), new_block.begin(), [](const statement::ptr &stmt) {return stmt->copy(); });
+      m_cases.emplace_back(if_case{condition->copy(), std::move(new_block)});
+   }
+}
+
+void if_switch_statement::add_case(const expression &condition, std::function<void(statement::collector &)> block) {
+   statement::collector col;
+   block(col);
+   m_cases.emplace_back(if_case{condition.copy(), col.build()});
+}
+
+void if_switch_statement::write_statement(writer &w) const {
+   bool first = true;
+   for (const auto &[condition, block]: m_cases) {
+      if (first) {
+         first = false;
+         w.put_indent();
+         w.write("if (");
+      } else {
+         w.write(" else if (");
+      }
+      condition->write_expression(w);
+      w.write(") {\n");
+      w.indent_in();
+      for(const auto &stmt: block) {
+         stmt->write_statement(w);
+      }
+      w.indent_out();
+
+      w.put_indent();
+      w.write("}");
+   }
+   w.write("\n");
+}
+
+statement::ptr if_switch_statement::copy() const {
+   return std::make_unique<if_switch_statement>(*this);
+}
+
 }// namespace mb::codegen

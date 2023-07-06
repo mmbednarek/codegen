@@ -240,3 +240,41 @@ void foo() {
 
 })");
 }
+
+TEST(codegen, if_switch) {
+   using namespace mb::codegen;
+
+   component cmp("mb::foo::bar");
+
+   cmp << function("void", "foo", std::vector<arg>(), [](statement::collector &col) {
+      if_switch_statement stmt;
+      stmt.add_case(raw("a == b"), [](statement::collector &col) {
+         col << raw("foo()");
+      });
+      stmt.add_case(raw("a == c"), [](statement::collector &col) {
+         col << raw("bar()");
+      });
+      stmt.add_case(raw("a == d"), [](statement::collector &col) {
+         col << raw("rab()");
+      });
+      col << stmt;
+   });
+
+   std::stringstream ss;
+   cmp.write_source(ss);
+
+   EXPECT_EQ(ss.str(), R"(
+namespace mb::foo::bar {
+
+void foo() {
+   if (a == b) {
+      foo();
+   } else if (a == c) {
+      bar();
+   } else if (a == d) {
+      rab();
+   }
+}
+
+})");
+}

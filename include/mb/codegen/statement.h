@@ -57,6 +57,23 @@ class if_statement : public statement {
    ptr copy() const override;
 };
 
+class if_switch_statement : public statement {
+   struct if_case {
+      expression::ptr condition;
+      std::vector<statement::ptr> block;
+   };
+
+   std::vector<if_case> m_cases;
+
+ public:
+   if_switch_statement() = default;
+   if_switch_statement(const if_switch_statement &other);
+   void add_case(const expression &condition, std::function<void(statement::collector &)> block);
+
+   void write_statement(writer &w) const override;
+   ptr copy() const override;
+};
+
 class switch_statement : public statement {
    struct case_statement {
       expression::ptr m_case;
