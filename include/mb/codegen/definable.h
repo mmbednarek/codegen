@@ -53,6 +53,20 @@ class function : public definable {
    [[nodiscard]] ptr copy() const override;
 };
 
+class template_arguments : public definable {
+ private:
+   std::vector<arg> m_arguments;
+   std::unique_ptr<definable> m_definable;
+
+ public:
+   template_arguments(std::vector<arg> arguments, const definable &def);
+   template_arguments(const template_arguments &other);
+
+   void write_declaration(writer &w) const override;
+   void write_definition(writer &w) const override;
+   [[nodiscard]] ptr copy() const override;
+};
+
 }// namespace mb::codegen
 
 #endif//LIBMB_OBJECT_H

@@ -80,4 +80,35 @@ function::function(std::string_view return_type, std::string_view name, std::vec
 
 arg::arg(std::string_view type, std::string_view name) : type(type), name(name) {}
 
+template_arguments::template_arguments(std::vector<arg> arguments, const definable &def) : m_arguments(std::move(arguments)),
+                                                                                           m_definable(def.copy()) {
+}
+
+template_arguments::template_arguments(const template_arguments &other) : m_definable(other.m_definable->copy()) {
+   m_arguments.reserve(other.m_arguments.size());
+   std::copy(other.m_arguments.begin(), other.m_arguments.end(), std::back_inserter(m_arguments));
+}
+
+void template_arguments::write_declaration(writer &w) const {
+   w.put_indent();
+   w.write("template<");
+   if (!m_arguments.empty()) {
+      auto it_first = m_arguments.begin();
+      w.write("{} {}", it_first->type, it_first->name);
+      std::for_each(it_first + 1, m_arguments.end(), [&w](const arg &arg) {
+         w.write(", {} {}", arg.type, arg.name);
+      });
+   }
+   w.write(">\n");
+   m_definable->write_definition(w);
+}
+
+void template_arguments::write_definition(writer &w) const {
+   // it's all declaration
+}
+
+definable::ptr template_arguments::copy() const {
+   return std::make_unique<template_arguments>(*this);
+}
+
 }// namespace mb::codegen

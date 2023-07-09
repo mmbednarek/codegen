@@ -243,7 +243,6 @@ void foo() {
 
 TEST(codegen, if_switch) {
    using namespace mb::codegen;
-
    component cmp("mb::foo::bar");
 
    cmp << function("void", "foo", std::vector<arg>(), [](statement::collector &col) {
@@ -277,4 +276,28 @@ void foo() {
 }
 
 })");
+}
+
+TEST(codegen, template_func) {
+   using namespace mb::codegen;
+   component cmp("mb::foo::bar");
+
+   cmp << template_arguments({{"typename", "TFoo"}, {"typename", "TBar"}}, function("void", "foo", std::vector<arg>(), [](statement::collector &col) {
+     col << raw("foo()");
+   }));
+
+   std::stringstream ss;
+   cmp.write_header(ss);
+
+   EXPECT_EQ(ss.str(), R"(#pragma once
+
+namespace mb::foo::bar {
+
+template<typename TFoo, typename TBar>
+void foo() {
+   foo();
+}
+
+}
+)");
 }
