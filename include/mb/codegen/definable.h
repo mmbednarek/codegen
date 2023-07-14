@@ -32,8 +32,8 @@ class globalvar : public definable {
 };
 
 struct arg {
-   std::string_view type;
-   std::string_view name;
+   std::string type;
+   std::string name;
    arg(std::string_view type, std::string_view name);
 };
 

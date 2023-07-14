@@ -78,7 +78,7 @@ function::function(std::string_view return_type, std::string_view name, std::vec
                                                                                    return col.build();
                                                                                 }()) {}
 
-arg::arg(std::string_view type, std::string_view name) : type(type), name(name) {}
+arg::arg(std::string_view type, std::string_view name) : type(std::string{type}), name(std::string{name}) {}
 
 template_arguments::template_arguments(std::vector<arg> arguments, const definable &def) : m_arguments(std::move(arguments)),
                                                                                            m_definable(def.copy()) {
