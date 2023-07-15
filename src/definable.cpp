@@ -103,7 +103,7 @@ void template_arguments::write_declaration(writer &w) const {
    m_definable->write_definition(w);
 }
 
-void template_arguments::write_definition(writer &w) const {
+void template_arguments::write_definition(writer &/*w*/) const {
    // it's all declaration
 }
 
