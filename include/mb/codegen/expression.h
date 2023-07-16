@@ -75,6 +75,18 @@ class assign : public expression {
    [[nodiscard]] ptr copy() const override;
 };
 
+class binary_operator : public expression {
+   expression::ptr m_lhs;
+   std::string m_operator;
+   expression::ptr m_rhs;
+
+ public:
+   binary_operator(const expression &lhs, std::string_view op, const expression &rhs);
+
+   void write_expression(writer &w) const override;
+   [[nodiscard]] ptr copy() const override;
+};
+
 class items : public expression {
    std::vector<expression::ptr> m_items;
 

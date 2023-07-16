@@ -108,7 +108,7 @@ method_call::method_call(const method_call &other) : m_object(other.m_object->co
 }
 
 void method_call::write_expression(writer &w) const {
-   if (auto *deref_val = dynamic_cast<deref*>(m_object.get()); deref_val != nullptr) {
+   if (auto *deref_val = dynamic_cast<deref *>(m_object.get()); deref_val != nullptr) {
       deref_val->m_value->write_expression(w);
       w.write("->");
    } else {
@@ -122,8 +122,8 @@ void method_call::write_expression(writer &w) const {
       auto it_first = m_arguments.begin();
       (*it_first)->write_expression(w);
       std::for_each(it_first + 1, m_arguments.end(), [&w](const expression::ptr &ex) {
-        w.write(", ");
-        ex->write_expression(w);
+         w.write(", ");
+         ex->write_expression(w);
       });
    }
    w.write(")");
@@ -142,6 +142,21 @@ void deref::write_expression(writer &w) const {
 
 expression::ptr deref::copy() const {
    return std::make_unique<deref>(*m_value);
+}
+
+binary_operator::binary_operator(const expression &lhs, std::string_view op, const expression &rhs) : m_lhs(lhs.copy()),
+                                                                                                      m_operator(op),
+                                                                                                      m_rhs(rhs.copy()) {
+}
+
+void binary_operator::write_expression(writer &w) const {
+   m_lhs->write_expression(w);
+   w.write(" {} ", m_operator);
+   m_rhs->write_expression(w);
+}
+
+expression::ptr binary_operator::copy() const {
+   return std::make_unique<binary_operator>(*m_lhs, m_operator, *m_rhs);
 }
 
 }// namespace mb::codegen

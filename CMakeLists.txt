@@ -19,6 +19,6 @@ if (LIBMB_CODEGEN_TEST_TARGET)
     add_subdirectory(tests)
 endif(LIBMB_CODEGEN_TEST_TARGET)
 
-add_library(libmb_codegen src/class.cpp src/definable.cpp src/expression.cpp src/statement.cpp src/writer.cpp src/lambda.cpp src/component.cpp)
+add_library(libmb_codegen src/class.cpp src/definable.cpp src/expression.cpp src/statement.cpp src/writer.cpp src/lambda.cpp src/component.cpp src/destination.cpp)
 target_include_directories(libmb_codegen PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>)
 target_link_libraries(libmb_codegen libmb fmt)
