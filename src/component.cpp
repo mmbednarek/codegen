@@ -13,30 +13,23 @@ void component::operator<<(const definable &def) {
 }
 
 void component::source_include(const std::string &inc) {
-   m_source_includes.emplace_back(include{inc, false});
+   m_source_includes.emplace(inc, false);
 }
 
 void component::source_include_local(const std::string &inc) {
-   m_source_includes.emplace_back(include{inc, true});
+   m_source_includes.emplace(inc, true);
 }
 
 void component::header_include(const std::string &inc) {
-   m_header_includes.emplace_back(include{inc, false});
+   m_header_includes.emplace(inc, false);
 }
 
 void component::header_include_local(const std::string &inc) {
-   m_header_includes.emplace_back(include{inc, true});
+   m_header_includes.emplace(inc, true);
 }
 
 void component::write_header(std::ostream &stream) {
    writer w(stream);
-   std::sort(m_header_includes.begin(), m_header_includes.end(), [](const include &left, const include &right) {
-      if (left.local && !right.local)
-         return true;
-      if (!left.local && right.local)
-         return false;
-      return left.path.compare(right.path) < 0;
-   });
 
    if (!m_header_constant.empty()) {
       w.write("#ifndef {}\n#define {}\n", m_header_constant, m_header_constant);
@@ -70,13 +63,6 @@ void component::write_header(std::ostream &stream) {
 
 void component::write_source(std::ostream &stream) {
    writer w(stream);
-   std::sort(m_source_includes.begin(), m_source_includes.end(), [](const include &left, const include &right) {
-     if (left.local && !right.local)
-        return true;
-     if (!left.local && right.local)
-        return false;
-     return left.path.compare(right.path) < 0;
-   });
 
    std::for_each(m_source_includes.begin(), m_source_includes.end(), [&w](const include &inc) {
       if (inc.local) {
