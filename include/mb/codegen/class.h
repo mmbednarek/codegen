@@ -40,8 +40,8 @@ class class_spec : public definable {
 
    void add_public(const class_member &member);
    void add_private(const class_member &member);
-   void add_public(std::string_view type, std::string_view name);
-   void add_private(std::string_view type, std::string_view name);
+   void add_public(std::string_view type, std::string_view name, bool default_value = true);
+   void add_private(std::string_view type, std::string_view name, bool default_value = true);
 
    void write_declaration(writer &w) const override;
    void write_definition(writer &w) const override;

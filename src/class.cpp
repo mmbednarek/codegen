@@ -94,12 +94,12 @@ void class_spec::add_private(const class_member &member) {
    m_private_members.emplace_back(std::move(copied));
 }
 
-void class_spec::add_public(std::string_view type, std::string_view name) {
-   m_public_attributes.emplace_back(std::string(type), std::string(name));
+void class_spec::add_public(std::string_view type, std::string_view name, bool default_value) {
+   m_public_attributes.emplace_back(std::string(type), std::string(name), default_value);
 }
 
-void class_spec::add_private(std::string_view type, std::string_view name) {
-   m_private_attributes.emplace_back(std::string(type), std::string(name));
+void class_spec::add_private(std::string_view type, std::string_view name, bool default_value) {
+   m_private_attributes.emplace_back(std::string(type), std::string(name), default_value);
 }
 
 method::method(const method &other) : m_return_type(other.m_return_type),
